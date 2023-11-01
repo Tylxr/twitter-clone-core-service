@@ -1,14 +1,17 @@
 import express from "express";
-import path from "path";
 import cookieParser from "cookie-parser";
-import indexRouter from "./index";
+import models from "./models";
+import routes from "./routes";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Load models
+models();
+
 // Routes
-app.use("/", indexRouter);
+app.use("/core/v1", routes);
 
 export default app;

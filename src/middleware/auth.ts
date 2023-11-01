@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import authInstance from "../utils/authInstance";
+import authInstance from "@/utils/authInstance";
 
 export default async function Auth(req: Request, res: Response, next: NextFunction) {
 	try {

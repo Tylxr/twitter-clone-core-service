@@ -3,52 +3,73 @@ import mongoose, { Schema } from "mongoose";
 import { IUserMongooseModel, IUserMongooseDocument } from "../types/user";
 
 // Schema
-const userSchema: Schema = new Schema<IUserMongooseDocument, IUserMongooseModel>({
-	username: {
+const tweetSchema: Schema = new Schema({
+	userProfile: {
+		type: mongoose.Types.ObjectId,
+		ref: "userProfile",
+	},
+	body: {
 		type: String,
-		required: true,
+		maxLength: 150,
 	},
-	password: {
-		type: String,
-		required: true,
+	comments: [
+		{
+			userProfile: {
+				type: mongoose.Types.ObjectId,
+				ref: "userProfile",
+			},
+			body: String,
+			likes: {
+				type: Number,
+				default: 0,
+			},
+		},
+	],
+	likes: {
+		type: Number,
+		default: 0,
 	},
-});
-
-// Hooks
-userSchema.pre("save", function (next) {
-	if (this.isModified("password")) {
-		this.password = hashSync(this.password);
-	}
-	next();
-});
-
-// Options
-userSchema.set("toJSON", {
-	virtuals: true,
-	transform: (_, obj: IUserMongooseDocument) => {
-		delete obj.password;
-		return obj;
-	},
-});
-userSchema.set("toObject", {
-	virtuals: true,
-	transform: (_, obj: IUserMongooseDocument) => {
-		delete obj.password;
-		return obj;
+	createdDate: {
+		type: Date,
+		default: Date.now(),
 	},
 });
 
-// Statics
-userSchema.static("getByUsername", async function (username: string) {
-	return await this.findOne({ username });
-});
+// // Hooks
+// userSchema.pre("save", function (next) {
+// 	if (this.isModified("password")) {
+// 		this.password = hashSync(this.password);
+// 	}
+// 	next();
+// });
 
-// Methods
-userSchema.method("comparePassword", function (this: IUserMongooseDocument, password: string) {
-	return compareSync(password, this.password);
-});
+// // Options
+// userSchema.set("toJSON", {
+// 	virtuals: true,
+// 	transform: (_, obj: IUserMongooseDocument) => {
+// 		delete obj.password;
+// 		return obj;
+// 	},
+// });
+// userSchema.set("toObject", {
+// 	virtuals: true,
+// 	transform: (_, obj: IUserMongooseDocument) => {
+// 		delete obj.password;
+// 		return obj;
+// 	},
+// });
 
-// Indexes
-userSchema.index({ username: 1 });
+// // Statics
+// userSchema.static("getByUsername", async function (username: string) {
+// 	return await this.findOne({ username });
+// });
 
-export default mongoose.model<IUserMongooseDocument, IUserMongooseModel>("User", userSchema);
+// // Methods
+// userSchema.method("comparePassword", function (this: IUserMongooseDocument, password: string) {
+// 	return compareSync(password, this.password);
+// });
+
+// // Indexes
+// userSchema.index({ username: 1 });
+
+// export default mongoose.model<IUserMongooseDocument, IUserMongooseModel>("User", userSchema);

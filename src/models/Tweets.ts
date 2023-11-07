@@ -1,9 +1,8 @@
-import { hashSync, compareSync } from "bcryptjs";
 import mongoose, { Schema } from "mongoose";
-import { IUserMongooseModel, IUserMongooseDocument } from "../types/user";
+import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweet";
 
 // Schema
-const tweetSchema: Schema = new Schema({
+const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseModel>({
 	userProfile: {
 		type: mongoose.Types.ObjectId,
 		ref: "userProfile",
@@ -18,7 +17,10 @@ const tweetSchema: Schema = new Schema({
 				type: mongoose.Types.ObjectId,
 				ref: "userProfile",
 			},
-			body: String,
+			body: {
+				type: String,
+				maxLength: 100,
+			},
 			likes: {
 				type: Number,
 				default: 0,

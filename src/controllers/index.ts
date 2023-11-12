@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { registerUser, loginUser, isUserAuthenticated, refreshAuthToken } from "../services";
 import { IUserMongooseModel, IUserMongooseDocument } from "../types/user";
-import { IAPIResponse } from "../types/response";
+import { IAPIResponse } from "../types/network";
 
 export async function register(req: Request, res: Response, next: NextFunction) {
 	try {
 		const userModel: IUserMongooseModel = mongoose.model<IUserMongooseDocument, IUserMongooseModel>("User");
 		const { username, password } = req.body;
 		const response: IAPIResponse = await registerUser(username, password, userModel);
-		return res.send(response);
+		return res.status(201).send(response);
 	} catch (err) {
 		console.error(err);
 		return res.sendStatus(500);

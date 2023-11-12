@@ -23,11 +23,18 @@ const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUser
 	following: {
 		type: [String],
 	},
+	createdDate: {
+		type: Date,
+		default: Date.now(),
+	},
 });
 
 // Statics
 userProfileSchema.static("getByUsername", async function (username: string) {
 	return await this.findOne({ username });
+});
+userProfileSchema.static("deleteByUsername", async function (username: string) {
+	return await this.deleteOne({ username });
 });
 
 // Indexes

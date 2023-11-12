@@ -5,31 +5,37 @@ import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweet";
 const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseModel>({
 	userProfile: {
 		type: mongoose.Types.ObjectId,
-		ref: "userProfile",
+		ref: "UserProfile",
 	},
 	body: {
 		type: String,
 		maxLength: 150,
+		minLength: 1,
+		required: true,
 	},
 	comments: [
 		{
 			userProfile: {
 				type: mongoose.Types.ObjectId,
-				ref: "userProfile",
+				ref: "UserProfile",
 			},
 			body: {
 				type: String,
 				maxLength: 100,
+				minLength: 1,
+				required: true,
 			},
 			likes: {
 				type: Number,
 				default: 0,
+				min: 0,
 			},
 		},
 	],
 	likes: {
 		type: Number,
 		default: 0,
+		min: 0,
 	},
 	createdDate: {
 		type: Date,
@@ -37,41 +43,8 @@ const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseMod
 	},
 });
 
-// // Hooks
-// userSchema.pre("save", function (next) {
-// 	if (this.isModified("password")) {
-// 		this.password = hashSync(this.password);
-// 	}
-// 	next();
-// });
+// Indexes
+tweetSchema.index({ createdDate: -1 });
+tweetSchema.index({ userProfile: 1, createdDate: -1 });
 
-// // Options
-// userSchema.set("toJSON", {
-// 	virtuals: true,
-// 	transform: (_, obj: IUserMongooseDocument) => {
-// 		delete obj.password;
-// 		return obj;
-// 	},
-// });
-// userSchema.set("toObject", {
-// 	virtuals: true,
-// 	transform: (_, obj: IUserMongooseDocument) => {
-// 		delete obj.password;
-// 		return obj;
-// 	},
-// });
-
-// // Statics
-// userSchema.static("getByUsername", async function (username: string) {
-// 	return await this.findOne({ username });
-// });
-
-// // Methods
-// userSchema.method("comparePassword", function (this: IUserMongooseDocument, password: string) {
-// 	return compareSync(password, this.password);
-// });
-
-// // Indexes
-// userSchema.index({ username: 1 });
-
-// export default mongoose.model<IUserMongooseDocument, IUserMongooseModel>("User", userSchema);
+export default mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet", tweetSchema);

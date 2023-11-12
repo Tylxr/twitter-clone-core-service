@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
 
 // Schema
@@ -25,41 +25,12 @@ const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUser
 	},
 });
 
-// // Hooks
-// userSchema.pre("save", function (next) {
-// 	if (this.isModified("password")) {
-// 		this.password = hashSync(this.password);
-// 	}
-// 	next();
-// });
+// Statics
+userProfileSchema.static("getByUsername", async function (username: string) {
+	return await this.findOne({ username });
+});
 
-// // Options
-// userSchema.set("toJSON", {
-// 	virtuals: true,
-// 	transform: (_, obj: IUserMongooseDocument) => {
-// 		delete obj.password;
-// 		return obj;
-// 	},
-// });
-// userSchema.set("toObject", {
-// 	virtuals: true,
-// 	transform: (_, obj: IUserMongooseDocument) => {
-// 		delete obj.password;
-// 		return obj;
-// 	},
-// });
+// Indexes
+userProfileSchema.index({ username: 1 });
 
-// // Statics
-// userSchema.static("getByUsername", async function (username: string) {
-// 	return await this.findOne({ username });
-// });
-
-// // Methods
-// userSchema.method("comparePassword", function (this: IUserMongooseDocument, password: string) {
-// 	return compareSync(password, this.password);
-// });
-
-// // Indexes
-// userSchema.index({ username: 1 });
-
-// export default mongoose.model<IUserMongooseDocument, IUserMongooseModel>("User", userSchema);
+export default mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile", userProfileSchema);

@@ -16,6 +16,7 @@ export interface IUserProfileDocument extends IUserProfileObject {
 // Generic Tweet ORM model - statics live in here
 export interface IGenericUserProfileModel {
 	new (userProfile: IUserProfileObject): IUserProfileDocument;
+	getByUsername(username: string): Promise<IUserProfileDocument>;
 }
 
 // Mongoose concretions

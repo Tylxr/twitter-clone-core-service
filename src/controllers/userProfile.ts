@@ -1,6 +1,6 @@
 import { createUserProfile, deleteUserProfile } from "@/services/userProfile";
 import { IAPIResponse } from "@/types/network";
-import { IGenericUserProfileModel, IUserProfileDocument, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
+import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 

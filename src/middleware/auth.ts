@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { INetworkRequestInstance } from "@/types/network";
 
-export default function Auth(authNetworkInstance: INetworkRequestInstance) {
+export default function Auth<T extends { tokenPayload: { username: string } }>(authNetworkInstance: INetworkRequestInstance<T>) {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			const token = req.headers.authorization && req.headers.authorization.split("Bearer ")?.[1];
@@ -22,8 +22,12 @@ export default function Auth(authNetworkInstance: INetworkRequestInstance) {
 				},
 			);
 
-			if (response && response.status === 200) next();
-			else return res.status(401).send({ errorMessage: "Authentication failed." });
+			if (response && response.status === 200) {
+				req.userProfile ??= response.data.tokenPayload.username;
+				next();
+			} else {
+				return res.status(401).send({ errorMessage: "Authentication failed." });
+			}
 		} catch (err) {
 			console.error(err.message);
 			return res.status(401).send({ errorMessage: err.message || "Authentication failed." });

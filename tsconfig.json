@@ -18,10 +18,11 @@
         },
         "typeRoots": [
             "./node_modules/@types"
-        ]
+        ],
     },
     "include": [
         "server.ts",
+        "index.d.ts",
         "src/**/*",
         "src"
     ],

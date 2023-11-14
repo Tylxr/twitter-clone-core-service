@@ -1,11 +1,15 @@
 import express, { NextFunction, Request, Response } from "express";
 import ensureAuthenticated from "../middleware/auth";
 import userProfileRouter from "./userProfile";
+import tweetsRouter from "./tweets";
 import authInstance from "@/utils/authInstance";
 
 const router = express.Router();
 
-// Routes - GET
+// Health check
+router.get("/health", (req: Request, res: Response, next: NextFunction) => res.sendStatus(200));
+
+//* Temporary routes
 router.get("/tweets", ensureAuthenticated(authInstance), (req, res, next) => {
 	res.send({
 		tweets: [
@@ -21,14 +25,11 @@ router.get("/tweets", ensureAuthenticated(authInstance), (req, res, next) => {
 	});
 });
 
-// Routes - POST
-router.use(
-	"/userProfile",
-	// * ensureAuthenticated,
-	userProfileRouter(router),
-);
+// Secure the routes below
+router.use(ensureAuthenticated(authInstance));
 
-// Health check
-router.get("/health", (req: Request, res: Response, next: NextFunction) => res.sendStatus(200));
+// Routes
+router.use("/userProfile", userProfileRouter(router));
+router.use("/tweet", tweetsRouter(router));
 
 export default router;

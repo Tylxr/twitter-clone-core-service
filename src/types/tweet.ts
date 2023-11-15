@@ -3,7 +3,7 @@ import { IUserProfileObject } from "./userProfile";
 
 // Generic types
 export interface ITweetObject {
-	userProfile: IUserProfileObject;
+	userProfile: string;
 	body: string;
 	comments: Comment[];
 	likes: number;

@@ -3,11 +3,11 @@ import ensureAuthenticated from "../middleware/auth";
 import userProfileRouter from "./userProfile";
 import tweetsRouter from "./tweets";
 import authInstance from "@/utils/authInstance";
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { IGenericUserProfileModel, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
 
 const router = express.Router();
-const userProfileModel: IGenericUserProfileModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
+const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
 
 // Health check
 router.get("/health", (req: Request, res: Response, next: NextFunction) => res.sendStatus(200));

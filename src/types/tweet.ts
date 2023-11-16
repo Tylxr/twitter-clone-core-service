@@ -1,9 +1,9 @@
-import { Model, Document } from "mongoose";
-import { IUserProfileObject } from "./userProfile";
+import { Model, Document, ObjectId } from "mongoose";
+import { IUserProfileMongooseDocument, IUserProfileObject } from "./userProfile";
 
 // Generic types
 export interface ITweetObject {
-	userProfile: string;
+	userProfile: IUserProfileObject | string;
 	body: string;
 	comments: Comment[];
 	likes: number;
@@ -27,7 +27,9 @@ export interface IGenericTweetModel {
 }
 
 // Mongoose concretions
-export interface ITweetMongooseDocument extends ITweetObject, Document {}
+export interface ITweetMongooseDocument extends Omit<ITweetObject, "userProfile">, Document {
+	userProfile: IUserProfileMongooseDocument;
+}
 export interface ITweetMongooseModel extends Model<ITweetMongooseDocument> {
 	save(): Promise<ITweetMongooseDocument>;
 }

@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
 
 // Schema
@@ -30,6 +30,10 @@ const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUser
 });
 
 // Statics
+userProfileSchema.static("getIdByUsername", async function (username: string): Promise<string | undefined> {
+	const doc: IUserProfileMongooseDocument = await this.findOne({ username }, { _id: 1 });
+	return doc ? doc._id.toString() : undefined;
+});
 userProfileSchema.static("getByUsername", async function (username: string) {
 	return await this.findOne({ username });
 });

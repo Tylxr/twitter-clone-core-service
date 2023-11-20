@@ -1,8 +1,8 @@
 import { postTweet } from "@/controllers/tweets";
 import express from "express";
 
-export default function (router: express.IRouter) {
-	router.post("/", postTweet);
+const router = express.Router();
 
-	return router;
-}
+router.post("/", postTweet);
+
+export default router;

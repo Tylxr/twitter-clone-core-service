@@ -1,5 +1,5 @@
 import { Model, Document, ObjectId } from "mongoose";
-import { IUserProfileMongooseDocument, IUserProfileObject } from "./userProfile";
+import { IUserProfileMongooseDocument, IUserProfileObject } from "./userProfileTypes";
 
 // Generic types
 export interface ITweetObject {

@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { IAPIResponse } from "@/types/network";
+import { IAPIResponse } from "@/types/networkTypes";
 import mongoose from "mongoose";
-import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweet";
-import { createTweet } from "@/services/tweets";
+import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
+import { createTweet } from "@/services/tweetsService";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	try {

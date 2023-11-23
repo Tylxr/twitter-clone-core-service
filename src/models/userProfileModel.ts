@@ -1,5 +1,5 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
-import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
+import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 
 // Schema
 const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUserProfileMongooseModel>({

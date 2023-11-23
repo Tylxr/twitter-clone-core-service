@@ -1,5 +1,5 @@
-import { IAPIResponse } from "@/types/network";
-import { IGenericTweetModel } from "@/types/tweet";
+import { IAPIResponse } from "@/types/networkTypes";
+import { IGenericTweetModel } from "@/types/tweetTypes";
 
 export async function createTweet(userProfile: string, tweet: string, tweetModel: IGenericTweetModel): Promise<IAPIResponse> {
 	if (typeof tweet !== "string" || tweet.length === 0 || tweet.length > 150) {

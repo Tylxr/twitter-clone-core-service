@@ -1,4 +1,4 @@
-import { postTweet } from "@/controllers/tweets";
+import { postTweet } from "@/controllers/tweetsController";
 import express from "express";
 
 const router = express.Router();

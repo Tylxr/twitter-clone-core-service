@@ -1,10 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
 import ensureAuthenticated from "../middleware/auth";
-import userProfileRoutes from "./userProfile";
-import tweetsRoutes from "./tweets";
+import userProfileRoutes from "./userProfileRoutes";
+import tweetsRoutes from "./tweetsRoutes";
 import authInstance from "@/utils/authInstance";
 import mongoose, { ObjectId } from "mongoose";
-import { IGenericUserProfileModel, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfile";
+import { IGenericUserProfileModel, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 
 const router = express.Router();
 

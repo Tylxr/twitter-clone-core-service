@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { INetworkRequestInstance } from "@/types/network";
-import { IGenericUserProfileModel } from "@/types/userProfile";
+import { INetworkRequestInstance } from "@/types/networkTypes";
+import { IGenericUserProfileModel } from "@/types/userProfileTypes";
 
 export default function Auth<T extends { tokenPayload: { username: string } }>(
 	authNetworkInstance: INetworkRequestInstance<T>,

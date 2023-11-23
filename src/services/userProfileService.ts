@@ -1,5 +1,5 @@
-import { IAPIResponse } from "@/types/network";
-import { IGenericUserProfileModel } from "@/types/userProfile";
+import { IAPIResponse } from "@/types/networkTypes";
+import { IGenericUserProfileModel } from "@/types/userProfileTypes";
 
 export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IAPIResponse> {
 	if (!username || username.length < 4) {

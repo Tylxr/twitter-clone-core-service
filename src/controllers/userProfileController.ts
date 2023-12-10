@@ -51,7 +51,7 @@ export async function retrieveProfile(req: Request, res: Response, next: NextFun
 		 */
 
 		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-		const userProfileRepo = new UserProfileRepository(userProfileModel);
+		const userProfileRepo = new UserProfileRepository(userProfileModel, );
 	} catch (err) {
 		console.error(err);
 		return res.sendStatus(500);

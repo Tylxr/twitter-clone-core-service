@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import ensureAuthenticated from "../middleware/auth";
 import userProfileRoutes from "./userProfileRoutes";
 import tweetsRoutes from "./tweetsRoutes";
-import authInstance from "@/utils/authInstance";
+import authInstance from "@/connections/authInstance";
 import mongoose, { ObjectId } from "mongoose";
 import { IGenericUserProfileModel, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 

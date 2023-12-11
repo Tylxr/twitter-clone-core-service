@@ -1,5 +1,7 @@
+import { redisClient } from "@/connections/redis";
 import UserProfileRepository from "@/repositories/userProfileRepo";
 import { createUserProfile, deleteUserProfile } from "@/services/userProfileService";
+import { IGenericCache } from "@/types/cacheTypes";
 import { IAPIResponse } from "@/types/networkTypes";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 import { Request, Response, NextFunction } from "express";
@@ -35,7 +37,9 @@ export async function retrieveProfile(req: Request, res: Response, next: NextFun
 		 *  Create a userprofile repo instance. Pass in model & redis.
 		 *  Service should accept the generic model and generic caching layer.
 		 *      Service logic:
-		 *          - Using the userprofile repo, go and get the user profile.
+		 *          - Call the userprofile repo.
+		 *            Userprofile repo logic:
+		 *              Go and get the user profile.
 		 *              - The logic for this is that it tries to retrieve it from the cache.
 		 *              if cachedEntry
 		 *                 return cachedEntry;
@@ -51,7 +55,11 @@ export async function retrieveProfile(req: Request, res: Response, next: NextFun
 		 */
 
 		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-		const userProfileRepo = new UserProfileRepository(userProfileModel, );
+		const cache: IGenericCache = redisClient;
+		const userProfileRepo = new UserProfileRepository(userProfileModel, cache);
+
+		// TODO: Call service method, passing repo into it. Service should call repo method. Repo implementation needs
+		// TODO: to be written.
 	} catch (err) {
 		console.error(err);
 		return res.sendStatus(500);

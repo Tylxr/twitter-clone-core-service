@@ -1,18 +1,19 @@
-import { createClient } from "redis";
+import { IGenericCache } from "@/types/cacheTypes";
+import { createClient, RedisClientType } from "redis";
 
-let redisClient;
+let CLIENT: undefined | RedisClientType;
 
 export const connectToRedis = async () => {
 	try {
 		console.log("Attempting to connect to Redis...");
-		redisClient = createClient({
+		CLIENT = createClient({
 			socket: {
 				host: process.env.REDIS_HOST,
 				port: parseInt(process.env.REDIS_PORT),
 			},
 			password: process.env.REDIS_PASSWORD,
 		});
-		await redisClient.connect();
+		await CLIENT.connect();
 		console.log("✅ Connected to Redis successfully.");
 	} catch (err) {
 		console.error(err.message);
@@ -20,4 +21,26 @@ export const connectToRedis = async () => {
 	}
 };
 
-export { redisClient };
+// Generic Adapter
+export const redisClient: IGenericCache = {
+	get: async (key: string) => {
+		try {
+			if (!CLIENT) throw new Error("No Redis connection available.");
+			const result = await CLIENT.get(key);
+			return JSON.parse(result);
+		} catch (err) {
+			console.error(err);
+			return null;
+		}
+	},
+	set: async <T>(key: string, payload: T) => {
+		try {
+			if (!CLIENT) throw new Error("No Redis connection available.");
+			const result = await CLIENT.set(key, JSON.stringify(payload));
+			return result;
+		} catch (err) {
+			console.error(err);
+			return null;
+		}
+	},
+};

@@ -1,4 +1,4 @@
-export interface IAPIResponse {
+export interface IGenericResponse {
 	error: boolean;
 	errorMessage?: string;
 	message?: string;

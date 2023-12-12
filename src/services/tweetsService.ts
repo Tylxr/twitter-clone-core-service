@@ -1,7 +1,7 @@
-import { IAPIResponse } from "@/types/networkTypes";
+import { IGenericResponse } from "@/types/networkTypes";
 import { IGenericTweetModel } from "@/types/tweetTypes";
 
-export async function createTweet(userProfile: string, tweet: string, tweetModel: IGenericTweetModel): Promise<IAPIResponse> {
+export async function createTweet(userProfile: string, tweet: string, tweetModel: IGenericTweetModel): Promise<IGenericResponse> {
 	if (typeof tweet !== "string" || tweet.length === 0 || tweet.length > 150) {
 		return { error: true, errorMessage: "Tweet body provided is invalid." };
 	}

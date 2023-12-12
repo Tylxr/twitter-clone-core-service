@@ -1,4 +1,6 @@
 import { Model, Document, ObjectId } from "mongoose";
+import { IGenericCache } from "./cacheTypes";
+import { IGenericResponse } from "./networkTypes";
 
 // Generic types
 export interface IUserProfileObject {
@@ -30,4 +32,13 @@ export interface IUserProfileMongooseModel extends Model<IUserProfileMongooseDoc
 	getByUsername(username: string): Promise<IUserProfileMongooseDocument>;
 	deleteByUsername(username: string): Promise<void>;
 	save(): Promise<IUserProfileMongooseDocument>;
+}
+
+// Repo types
+export interface IGenericUserProfileRepo {
+	retrieveUserProfile(username: string): Promise<IUserProfileResponse>;
+}
+
+export interface IUserProfileResponse extends IGenericResponse {
+	userProfile: IUserProfileObject | undefined;
 }

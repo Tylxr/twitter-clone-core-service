@@ -1,7 +1,7 @@
-import { IAPIResponse } from "@/types/networkTypes";
-import { IGenericUserProfileModel } from "@/types/userProfileTypes";
+import { IGenericResponse } from "@/types/networkTypes";
+import { IGenericUserProfileModel, IGenericUserProfileRepo, IUserProfileResponse } from "@/types/userProfileTypes";
 
-export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IAPIResponse> {
+export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
 	if (!username || username.length < 4) {
 		return { error: true, errorMessage: "Username failed validation." };
 	}
@@ -20,7 +20,7 @@ export async function createUserProfile(username: string, userProfileModel: IGen
 	}
 }
 
-export async function deleteUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IAPIResponse> {
+export async function deleteUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
 	if (!username || username.length < 4) {
 		return { error: true, errorMessage: "Invalid username provided." };
 	}
@@ -37,4 +37,13 @@ export async function deleteUserProfile(username: string, userProfileModel: IGen
 		console.error(err);
 		return { error: true, errorMessage: "Error deleting user profile." };
 	}
+}
+
+export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string): Promise<IUserProfileResponse> {
+	if (!username || username.length < 4) {
+		return { error: true, errorMessage: "Invalid username provided.", userProfile: undefined };
+	}
+
+	const userProfileResponse: IUserProfileResponse = await userProfileRepo.retrieveUserProfile(username);
+	return userProfileResponse;
 }

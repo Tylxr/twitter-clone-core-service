@@ -1,4 +1,4 @@
-import { createProfile, deleteProfile, retrieveProfile } from "@/controllers/userProfileController";
+import { createProfile, deleteProfile, retrieveProfile, updateProfile } from "@/controllers/userProfileController";
 import express from "express";
 
 const router = express.Router();
@@ -7,6 +7,8 @@ router.post("/", createProfile);
 router.delete("/", deleteProfile);
 
 router.get("/:username", retrieveProfile);
+
+router.patch("/:username", updateProfile);
 
 /**
  * I should implement pub/sub pattern for cache invalidation.

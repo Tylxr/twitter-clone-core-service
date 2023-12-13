@@ -36,8 +36,30 @@ export async function retrieveProfile(req: Request, res: Response, next: NextFun
 		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
 		const cache: IGenericCache = redisClient;
 		const userProfileRepo = new UserProfileRepository(userProfileModel, cache);
-		const response: IUserProfileResponse = await retrieveUserProfile(userProfileRepo, req.params.username);
+		const { username } = req.params;
+		const response: IUserProfileResponse = await retrieveUserProfile(userProfileRepo, username);
 		return res.status(response.error ? 400 : 200).send(response);
+	} catch (err) {
+		console.error(err);
+		return res.sendStatus(500);
+	}
+}
+
+export async function updateProfile(req: Request, res: Response, next: NextFunction) {
+	try {
+		/**
+		 * Need to grab the bio from the request (body!? query!?)
+		 * Pass through to the service, along with the model.
+		 * Service will:
+		 *      - Check the bio is a string, check length < 201
+		 *      - Using the model, update the doc, save()
+		 *      - Emit and event to invalidate the cache
+		 * Then, return the response to the f/e
+		 */
+
+		const { bio } = req.body;
+		debugger;
+		return res.sendStatus(200);
 	} catch (err) {
 		console.error(err);
 		return res.sendStatus(500);

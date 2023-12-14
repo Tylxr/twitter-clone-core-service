@@ -1,10 +1,12 @@
+import { IUserProfileObject } from "@/types/userProfileTypes";
+
 export {};
 
 declare global {
 	namespace Express {
 		export interface Request {
-			userProfile?: string;
-			userProfileId?: string;
+			userProfile?: IUserProfileObject;
+			userProfileUsername?: string;
 		}
 	}
 }

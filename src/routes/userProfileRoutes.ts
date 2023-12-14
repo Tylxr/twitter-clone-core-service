@@ -8,7 +8,7 @@ router.delete("/", deleteProfile);
 
 router.get("/:username", retrieveProfile);
 
-router.patch("/:username", updateProfile);
+router.patch("/", updateProfile);
 
 /**
  * I should implement pub/sub pattern for cache invalidation.

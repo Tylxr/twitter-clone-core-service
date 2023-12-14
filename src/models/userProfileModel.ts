@@ -34,7 +34,8 @@ userProfileSchema.static("getIdByUsername", async function (username: string): P
 	const doc: IUserProfileMongooseDocument = await this.findOne({ username }, { _id: 1 });
 	return doc ? doc._id.toString() : undefined;
 });
-userProfileSchema.static("getByUsername", async function (username: string) {
+userProfileSchema.static("getByUsername", async function (username: string, lean: boolean = false) {
+	if (lean) return await this.findOne({ username }).lean();
 	return await this.findOne({ username });
 });
 userProfileSchema.static("deleteByUsername", async function (username: string) {

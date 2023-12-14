@@ -1,5 +1,4 @@
 import { Model, Document, ObjectId } from "mongoose";
-import { IGenericCache } from "./cacheTypes";
 import { IGenericResponse } from "./networkTypes";
 
 // Generic types
@@ -20,7 +19,7 @@ export interface IUserProfileDocument extends IUserProfileObject {
 export interface IGenericUserProfileModel {
 	new (userProfile: IUserProfileObject): IUserProfileDocument;
 	getIdByUsername(username: string): Promise<string>;
-	getByUsername(username: string): Promise<IUserProfileDocument>;
+	getByUsername(username: string, lean?: boolean): Promise<IUserProfileDocument>;
 	deleteByUsername(username: string): Promise<void>;
 }
 
@@ -29,7 +28,7 @@ export interface IUserProfileMongooseDocument extends IUserProfileObject, Docume
 
 export interface IUserProfileMongooseModel extends Model<IUserProfileMongooseDocument> {
 	getIdByUsername(username: string): Promise<string>;
-	getByUsername(username: string): Promise<IUserProfileMongooseDocument>;
+	getByUsername(username: string, lean?: boolean): Promise<IUserProfileMongooseDocument | null>;
 	deleteByUsername(username: string): Promise<void>;
 	save(): Promise<IUserProfileMongooseDocument>;
 }

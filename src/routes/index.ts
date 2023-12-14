@@ -12,10 +12,10 @@ const router = express.Router();
 router.get("/health", (req: Request, res: Response, next: NextFunction) => res.sendStatus(200));
 
 // Secure the routes below
-// router.use((req: Request, res: Response, next: NextFunction) => {
-// 	const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-// 	ensureAuthenticated(authInstance, userProfileModel)(req, res, next);
-// });
+router.use((req: Request, res: Response, next: NextFunction) => {
+	const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
+	ensureAuthenticated(authInstance, userProfileModel)(req, res, next);
+});
 
 // Routes
 router.use("/userProfile", userProfileRoutes);

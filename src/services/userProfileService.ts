@@ -47,3 +47,27 @@ export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRe
 	const userProfileResponse: IUserProfileResponse = await userProfileRepo.retrieveUserProfile(username);
 	return userProfileResponse;
 }
+
+export async function updateUserProfile(userProfileModel: IGenericUserProfileModel, username: string, bio: string): Promise<IGenericResponse> {
+	// - Check the bio is a string, check length < 201
+	// - Using the model, update the doc, save()
+	// - Emit an event to invalidate the cache
+
+	if (typeof bio !== "string" || bio.length > 200) {
+		return { error: true, errorMessage: "Invalid bio provided." };
+	}
+
+	const existingUserProfile = await userProfileModel.getByUsername(username);
+	if (!existingUserProfile) {
+		return { error: true, errorMessage: `No user profile found for username ${username}.` };
+	}
+
+	existingUserProfile.bio = bio;
+	try {
+		await existingUserProfile.save();
+		// TODO: Emit cache invalidation event
+	} catch (err) {
+		console.error(err);
+		return { error: true, errorMessage: "Error updating user profile." };
+	}
+}

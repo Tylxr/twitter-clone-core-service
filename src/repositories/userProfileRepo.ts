@@ -15,6 +15,7 @@ export default class UserProfileRepository implements IGenericUserProfileRepo {
 		const cachedEntry: IUserProfileObject = await this.cache.get(`user_profile_${username}`);
 
 		if (cachedEntry) {
+			console.log(`Found ${username} in the cache. Returning cached entry.`);
 			return { error: false, userProfile: cachedEntry };
 		} else {
 			try {
@@ -22,6 +23,7 @@ export default class UserProfileRepository implements IGenericUserProfileRepo {
 				if (userProfile) {
 					// Set the cache
 					await this.cache.set(`user_profile_${username}`, userProfile);
+					console.log(`Unable to find ${username} in the cache. Updating cache. Pulled record from DB.`);
 				}
 				return { error: !userProfile, userProfile };
 			} catch (err) {

@@ -57,6 +57,10 @@ export async function updateUserProfile(userProfileModel: IGenericUserProfileMod
 		return { error: true, errorMessage: "Invalid bio provided." };
 	}
 
+	// !!!!!!!!!!
+	//? From here down, we should be using a method on the user profile repo to handle the logic of using the user
+	//? profile model to get a user and emitting a cache invalidation event. The below needs refactoring.
+
 	const existingUserProfile = await userProfileModel.getByUsername(username);
 	if (!existingUserProfile) {
 		return { error: true, errorMessage: `No user profile found for username ${username}.` };

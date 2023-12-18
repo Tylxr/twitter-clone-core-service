@@ -1,5 +1,5 @@
 import { IGenericCache } from "@/types/cacheTypes";
-import { createClient, RedisClientType } from "redis";
+import { createClient, RedisClientType, SetOptions } from "redis";
 
 let CLIENT: RedisClientType | undefined;
 let CLIENT_LISTENER: RedisClientType | undefined;
@@ -36,10 +36,10 @@ export const redisClient: IGenericCache = {
 			return null;
 		}
 	},
-	set: async <T>(key: string, payload: T) => {
+	set: async <T, J extends SetOptions>(key: string, payload: T, options?: J) => {
 		try {
 			if (!CLIENT) throw new Error("No Redis connection available.");
-			const result = await CLIENT.set(key, JSON.stringify(payload));
+			const result = await CLIENT.set(key, JSON.stringify(payload), options);
 			return result;
 		} catch (err) {
 			console.error(err);

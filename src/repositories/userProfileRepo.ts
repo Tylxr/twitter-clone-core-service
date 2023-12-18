@@ -21,8 +21,8 @@ export default class UserProfileRepository implements IGenericUserProfileRepo {
 			try {
 				const userProfile = await this.userProfileModel.getByUsername(username);
 				if (userProfile) {
-					// Set the cache
-					await this.cache.set(`user_profile_${username}`, userProfile);
+					// Set the cache - 1 hour
+					await this.cache.set(`user_profile_${username}`, userProfile, { EX: 60 * 20 });
 					console.log(`Unable to find ${username} in the cache. Updating cache. Pulled record from DB.`);
 				}
 				return { error: !userProfile, userProfile };

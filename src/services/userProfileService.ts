@@ -66,8 +66,13 @@ export async function updateUserProfile(userProfileRepo: IGenericUserProfileRepo
 	}
 }
 
-export async function toggleFollowUser(userProfileRepo: IGenericUserProfileRepo, username: string, userProfileUsername: string): Promise<IGenericResponse> {
-	// TODO: Implement...
-	// Add toggle aggregate to user profile mongoose model
-	return { error: true };
+export async function toggleFollowUser(userProfileModel: IGenericUserProfileModel, username: string, userProfileUsername: string): Promise<IGenericResponse> {
+	if (!username) return { error: true, errorMessage: "No/invalid username provided." };
+	try {
+		await userProfileModel.toggleFollow(username, userProfileUsername);
+		return { error: false };
+	} catch (err) {
+		console.error(err);
+		return { error: true, errorMessage: "Error trying to follower user " + username };
+	}
 }

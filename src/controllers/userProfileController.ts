@@ -65,9 +65,7 @@ export async function toggleFollow(req: Request, res: Response, next: NextFuncti
 		const { username } = req.params;
 		const { userProfileUsername } = req;
 		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-		const cache: IGenericCache = redisClient;
-		const userProfileRepo = new UserProfileRepository(userProfileModel, cache);
-		const response: IGenericResponse = await toggleFollowUser(userProfileRepo, username, userProfileUsername);
+		const response: IGenericResponse = await toggleFollowUser(userProfileModel, username, userProfileUsername);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

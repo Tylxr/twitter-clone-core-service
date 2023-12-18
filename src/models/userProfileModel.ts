@@ -42,6 +42,49 @@ userProfileSchema.static("getByUsername", async function (username: string, lean
 userProfileSchema.static("deleteByUsername", async function (username: string) {
 	return await this.deleteOne({ username });
 });
+userProfileSchema.static("toggleFollow", async function (userToFollow: string, userProfileUsername: string) {
+	return await Promise.all([
+		// Update 'following' of this user profile
+		this.updateOne(
+			{
+				username: userProfileUsername,
+			},
+			[
+				{
+					$set: {
+						following: {
+							$cond: [
+								{ $in: [userToFollow, "$following"] },
+								{ $setDifference: ["$following", [userToFollow]] },
+								{ $concatArrays: ["$following", [userToFollow]] },
+							],
+						},
+					},
+				},
+			],
+		),
+
+		// Update 'followers' of target user profile
+		this.updateOne(
+			{
+				username: userToFollow,
+			},
+			[
+				{
+					$set: {
+						followers: {
+							$cond: [
+								{ $in: [userProfileUsername, "$followers"] },
+								{ $setDifference: ["$followers", [userProfileUsername]] },
+								{ $concatArrays: ["$followers", [userProfileUsername]] },
+							],
+						},
+					},
+				},
+			],
+		),
+	]);
+});
 
 // Indexes
 userProfileSchema.index({ username: 1 });

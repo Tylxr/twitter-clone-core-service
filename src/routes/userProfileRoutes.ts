@@ -1,4 +1,4 @@
-import { createProfile, deleteProfile, retrieveProfile, updateProfile } from "@/controllers/userProfileController";
+import { createProfile, deleteProfile, retrieveProfile, toggleFollow, updateProfile } from "@/controllers/userProfileController";
 import express from "express";
 
 const router = express.Router();
@@ -11,7 +11,7 @@ router.get("/:username", retrieveProfile);
 
 // PATCH
 router.patch("/", updateProfile);
-router.patch('/follow/:username', )
+router.patch("/follow/:username", toggleFollow);
 
 // DELETE
 router.delete("/", deleteProfile);

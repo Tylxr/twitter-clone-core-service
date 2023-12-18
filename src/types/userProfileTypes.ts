@@ -21,6 +21,7 @@ export interface IGenericUserProfileModel {
 	getIdByUsername(username: string): Promise<string>;
 	getByUsername(username: string, lean?: boolean): Promise<IUserProfileDocument>;
 	deleteByUsername(username: string): Promise<void>;
+	toggleFollow(userToFollow: string, userProfileUsername: string): Promise<void>;
 }
 
 // Mongoose concretions
@@ -30,6 +31,7 @@ export interface IUserProfileMongooseModel extends Model<IUserProfileMongooseDoc
 	getIdByUsername(username: string): Promise<string>;
 	getByUsername(username: string, lean?: boolean): Promise<IUserProfileMongooseDocument | null>;
 	deleteByUsername(username: string): Promise<void>;
+	toggleFollow(userToFollow: string, userProfileUsername: string): Promise<void>;
 	save(): Promise<IUserProfileMongooseDocument>;
 }
 

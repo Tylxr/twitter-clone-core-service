@@ -1,5 +1,5 @@
 import { IGenericResponse } from "@/types/networkTypes";
-import { IGenericUserProfileModel, IGenericUserProfileRepo, IUserProfileResponse } from "@/types/userProfileTypes";
+import { IGenericUserProfileModel, IGenericUserProfileRepo, IUserProfileDocument, IUserProfileResponse } from "@/types/userProfileTypes";
 
 export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
 	if (!username || username.length < 4) {
@@ -41,35 +41,25 @@ export async function deleteUserProfile(username: string, userProfileModel: IGen
 
 export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string): Promise<IUserProfileResponse> {
 	if (!username || username.length < 4) {
-		return { error: true, errorMessage: "Invalid username provided.", userProfile: undefined };
+		return { error: true, errorMessage: "Invalid username provided.", userProfile: null };
 	}
 
-	const userProfileResponse: IUserProfileResponse = await userProfileRepo.retrieveUserProfile(username);
-	return userProfileResponse;
+	try {
+		const userProfile = await userProfileRepo.retrieveUserProfile(username);
+		return { error: !userProfile, userProfile: userProfile };
+	} catch (err) {
+		return { error: true, errorMessage: err.message, userProfile: null };
+	}
 }
 
-export async function updateUserProfile(userProfileModel: IGenericUserProfileModel, username: string, bio: string): Promise<IGenericResponse> {
-	// - Check the bio is a string, check length < 201
-	// - Using the model, update the doc, save()
-	// - Emit an event to invalidate the cache
-
+export async function updateUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string, bio: string): Promise<IGenericResponse> {
 	if (typeof bio !== "string" || bio.length > 200) {
 		return { error: true, errorMessage: "Invalid bio provided." };
 	}
 
-	// !!!!!!!!!!
-	//? From here down, we should be using a method on the user profile repo to handle the logic of using the user
-	//? profile model to get a user and emitting a cache invalidation event. The below needs refactoring.
-
-	const existingUserProfile = await userProfileModel.getByUsername(username);
-	if (!existingUserProfile) {
-		return { error: true, errorMessage: `No user profile found for username ${username}.` };
-	}
-
-	existingUserProfile.bio = bio;
 	try {
-		await existingUserProfile.save();
-		// TODO: Emit cache invalidation event
+		await userProfileRepo.updateUserProfile(username, bio);
+		return { error: false };
 	} catch (err) {
 		console.error(err);
 		return { error: true, errorMessage: "Error updating user profile." };

@@ -50,7 +50,9 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
 		const { bio } = req.body;
 		const { userProfileUsername, userProfile } = req;
 		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-		const response: IGenericResponse = await updateUserProfile(userProfileModel, userProfileUsername, bio);
+		const cache: IGenericCache = redisClient;
+		const userProfileRepo = new UserProfileRepository(userProfileModel, cache);
+		const response: IGenericResponse = await updateUserProfile(userProfileRepo, userProfileUsername, bio);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

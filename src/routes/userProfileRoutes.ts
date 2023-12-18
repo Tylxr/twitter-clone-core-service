@@ -3,18 +3,16 @@ import express from "express";
 
 const router = express.Router();
 
+// POST
 router.post("/", createProfile);
-router.delete("/", deleteProfile);
 
+// GET
 router.get("/:username", retrieveProfile);
 
+// PATCH
 router.patch("/", updateProfile);
 
-/**
- * I should implement pub/sub pattern for cache invalidation.
- * When I write the PATCH /userProfile route, I will implement it. I can publish the event
- * and listen to it in the services file - maybe a new 'eventsService.ts' file that's imported
- * somewhere more global, maybe app.ts.
- */
+// DELETE
+router.delete("/", deleteProfile);
 
 export default router;

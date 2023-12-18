@@ -46,6 +46,9 @@ export const redisClient: IGenericCache = {
 			return null;
 		}
 	},
+	emit: <T>(eventName: string, payload: T) => emitRedisEvent(eventName, payload),
+	listen: async (eventName: string, cb: (message: string) => void) => await listenToRedisEvent(eventName, cb),
+	delete: async (key: string) => await CLIENT.del(key),
 };
 
 // Redis event publisher

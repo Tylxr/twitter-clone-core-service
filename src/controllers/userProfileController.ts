@@ -1,6 +1,6 @@
 import { redisClient } from "@/connections/redis";
 import UserProfileRepository from "@/repositories/userProfileRepo";
-import { createUserProfile, deleteUserProfile, retrieveUserProfile, updateUserProfile } from "@/services/userProfileService";
+import { createUserProfile, deleteUserProfile, retrieveUserProfile, toggleFollowUser, updateUserProfile } from "@/services/userProfileService";
 import { IGenericCache } from "@/types/cacheTypes";
 import { IGenericResponse } from "@/types/networkTypes";
 import { IUserProfileResponse, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
@@ -53,6 +53,21 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
 		const cache: IGenericCache = redisClient;
 		const userProfileRepo = new UserProfileRepository(userProfileModel, cache);
 		const response: IGenericResponse = await updateUserProfile(userProfileRepo, userProfileUsername, bio);
+		return res.status(response.error ? 400 : 200).send(response);
+	} catch (err) {
+		console.error(err);
+		return res.sendStatus(500);
+	}
+}
+
+export async function toggleFollow(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { username } = req.params;
+		const { userProfileUsername } = req;
+		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
+		const cache: IGenericCache = redisClient;
+		const userProfileRepo = new UserProfileRepository(userProfileModel, cache);
+		const response: IGenericResponse = await toggleFollowUser(userProfileRepo, username, userProfileUsername);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

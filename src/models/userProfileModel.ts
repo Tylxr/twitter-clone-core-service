@@ -1,4 +1,4 @@
-import mongoose, { ObjectId, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 
 // Schema
@@ -16,7 +16,8 @@ const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUser
 	},
 
 	// Type of [String] avoids the case where we would have millions of user profiles populated for
-	// a user. This forces us to manually lookup followers/following accounts when they are needed.
+	// a user. This forces us to manually lookup followers/following accounts when they are needed,
+	// which is an operation that isn't as popular and can be paginated if needed.
 	followers: {
 		type: [String],
 	},

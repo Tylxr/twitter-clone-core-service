@@ -65,3 +65,9 @@ export async function updateUserProfile(userProfileRepo: IGenericUserProfileRepo
 		return { error: true, errorMessage: "Error updating user profile." };
 	}
 }
+
+export async function toggleFollowUser(userProfileRepo: IGenericUserProfileRepo, username: string, userProfileUsername: string): Promise<IGenericResponse> {
+	// TODO: Implement...
+	// Add toggle aggregate to user profile mongoose model
+	return { error: true };
+}

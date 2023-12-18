@@ -11,6 +11,7 @@ router.get("/:username", retrieveProfile);
 
 // PATCH
 router.patch("/", updateProfile);
+router.patch('/follow/:username', )
 
 // DELETE
 router.delete("/", deleteProfile);

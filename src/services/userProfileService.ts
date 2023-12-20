@@ -76,3 +76,4 @@ export async function toggleFollowUser(userProfileModel: IGenericUserProfileMode
 		return { error: true, errorMessage: "Error trying to follower user " + username };
 	}
 }
+

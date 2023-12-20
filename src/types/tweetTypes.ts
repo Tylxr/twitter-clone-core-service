@@ -6,7 +6,7 @@ export interface ITweetObject {
 	userProfile: IUserProfileObject | string;
 	body: string;
 	comments: Comment[];
-	likes: number;
+	likes: string[];
 	createdDate: Date;
 }
 
@@ -24,6 +24,7 @@ export interface ITweetDocument extends ITweetObject {
 // Generic Tweet ORM model - statics live in here
 export interface IGenericTweetModel {
 	new (tweet: ITweetObject): ITweetDocument;
+	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
 }
 
 // Mongoose concretions
@@ -32,4 +33,5 @@ export interface ITweetMongooseDocument extends Omit<ITweetObject, "userProfile"
 }
 export interface ITweetMongooseModel extends Model<ITweetMongooseDocument> {
 	save(): Promise<ITweetMongooseDocument>;
+	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
 }

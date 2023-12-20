@@ -26,21 +26,34 @@ const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseMod
 				required: true,
 			},
 			likes: {
-				type: Number,
-				default: 0,
-				min: 0,
+				type: [String], // Array of usernames
 			},
 		},
 	],
 	likes: {
-		type: Number,
-		default: 0,
-		min: 0,
+		type: [String], // Array of usernames
 	},
 	createdDate: {
 		type: Date,
 		default: Date.now(),
 	},
+});
+
+// Statics
+tweetSchema.static("toggleLikeTweet", async function (tweetId: string, userProfileUsername: string) {
+	return await this.updateOne({ _id: tweetId }, [
+		{
+			$set: {
+				likes: {
+					$cond: [
+						{ $in: [userProfileUsername, "$likes"] },
+						{ $setDifference: ["$likes", [userProfileUsername]] },
+						{ $concatArrays: ["$likes", [userProfileUsername]] },
+					],
+				},
+			},
+		},
+	]);
 });
 
 // Indexes

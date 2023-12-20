@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
+import { ITweetMongooseDocument, ITweetMongooseModel, ITweetObject } from "@/types/tweetTypes";
 
 // Schema
 const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseModel>({
@@ -55,7 +55,22 @@ tweetSchema.static("toggleLikeTweet", async function (tweetId: string, userProfi
 		},
 	]);
 });
+tweetSchema.static("toggleLikeTweetComment", async function (tweetId: string, commentId: string, userProfileUsername: string) {
+	const tweet: any = await this.findOne({ _id: tweetId });
+	if (!tweet) throw new Error("No tweet found with id: " + tweetId);
 
+	// Find the comment
+	const comment = tweet.comments.findIndex((c: { _id: string }) => c._id === commentId);
+	if (!comment) throw new Error("No tweet comment found with id: " + commentId);
+
+	// Check the comment's likes
+	const index = comment.likes.findIndex((username: string) => username === userProfileUsername);
+	if (index === -1) tweet.comments.likes.push(userProfileUsername);
+	else tweet.comments.likes.splice(index, 1);
+
+	console.log(tweet);
+	return await tweet.save();
+});
 // Indexes
 tweetSchema.index({ createdDate: -1 });
 tweetSchema.index({ userProfile: 1, createdDate: -1 });

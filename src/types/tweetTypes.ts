@@ -13,7 +13,7 @@ export interface ITweetObject {
 export interface Comment {
 	userProfile: IUserProfileObject;
 	body: string;
-	likes: number;
+	likes: string[];
 }
 
 // Document methods live in here
@@ -25,6 +25,7 @@ export interface ITweetDocument extends ITweetObject {
 export interface IGenericTweetModel {
 	new (tweet: ITweetObject): ITweetDocument;
 	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
+	toggleLikeTweetComment(tweetId: string, commentId: string, userProfileUsername: string): Promise<void>;
 }
 
 // Mongoose concretions
@@ -34,4 +35,5 @@ export interface ITweetMongooseDocument extends Omit<ITweetObject, "userProfile"
 export interface ITweetMongooseModel extends Model<ITweetMongooseDocument> {
 	save(): Promise<ITweetMongooseDocument>;
 	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
+	toggleLikeTweetComment(tweetId: string, commentId: string, userProfileUsername: string): Promise<void>;
 }

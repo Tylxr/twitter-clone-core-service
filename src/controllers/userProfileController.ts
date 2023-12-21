@@ -2,8 +2,8 @@ import { redisClient } from "@/connections/redis";
 import UserProfileRepository from "@/repositories/userProfileRepo";
 import { createUserProfile, deleteUserProfile, retrieveUserProfile, toggleFollowUser, updateUserProfile } from "@/services/userProfileService";
 import { IGenericCache } from "@/types/cacheTypes";
-import { IGenericResponse } from "@/types/networkTypes";
-import { IUserProfileResponse, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
+import { IGenericResponse, IUserProfileResponse } from "@/types/networkTypes";
+import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 

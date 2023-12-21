@@ -1,3 +1,6 @@
+import { ITweetObject } from "./tweetTypes";
+import { IUserProfileObject } from "./userProfileTypes";
+
 export interface IGenericResponse {
 	error: boolean;
 	errorMessage?: string;
@@ -13,4 +16,12 @@ export interface INetworkRequestInstance<T> {
 export interface INetworkResponse<T> {
 	status: number;
 	data: T;
+}
+
+export interface IUserProfileResponse extends IGenericResponse {
+	userProfile: IUserProfileObject | undefined;
+}
+
+export interface ITweetResponse extends IGenericResponse {
+	tweet: ITweetObject | undefined;
 }

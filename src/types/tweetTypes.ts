@@ -24,6 +24,8 @@ export interface ITweetDocument extends ITweetObject {
 // Generic Tweet ORM model - statics live in here
 export interface IGenericTweetModel {
 	new (tweet: ITweetObject): ITweetDocument;
+	getById(_id: string, lean?: boolean): Promise<ITweetDocument | undefined>;
+	postComment(tweetId: string, userProfileId: string, comment: string): Promise<void>;
 	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
 	toggleLikeTweetComment(tweetId: string, commentId: string, userProfileUsername: string): Promise<void>;
 }
@@ -34,6 +36,8 @@ export interface ITweetMongooseDocument extends Omit<ITweetObject, "userProfile"
 }
 export interface ITweetMongooseModel extends Model<ITweetMongooseDocument> {
 	save(): Promise<ITweetMongooseDocument>;
+	getById(_id: string, lean?: boolean): Promise<ITweetMongooseDocument | undefined>;
+	postComment(tweetId: string, userProfileId: string, comment: string): Promise<void>;
 	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
 	toggleLikeTweetComment(tweetId: string, commentId: string, userProfileUsername: string): Promise<void>;
 }

@@ -1,5 +1,5 @@
-import { IGenericResponse } from "@/types/networkTypes";
-import { IGenericUserProfileModel, IGenericUserProfileRepo, IUserProfileDocument, IUserProfileResponse } from "@/types/userProfileTypes";
+import { IGenericResponse, IUserProfileResponse } from "@/types/networkTypes";
+import { IGenericUserProfileModel, IGenericUserProfileRepo } from "@/types/userProfileTypes";
 
 export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
 	if (!username || username.length < 4) {
@@ -46,7 +46,7 @@ export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRe
 
 	try {
 		const userProfile = await userProfileRepo.retrieveUserProfile(username);
-		return { error: !userProfile, userProfile: userProfile };
+		return { error: !userProfile, userProfile: userProfile, errorMessage: !userProfile ? "No user profile found for username: " + username : "" };
 	} catch (err) {
 		return { error: true, errorMessage: err.message, userProfile: null };
 	}
@@ -76,4 +76,3 @@ export async function toggleFollowUser(userProfileModel: IGenericUserProfileMode
 		return { error: true, errorMessage: "Error trying to follower user " + username };
 	}
 }
-

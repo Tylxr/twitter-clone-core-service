@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { IGenericResponse } from "@/types/networkTypes";
+import { IGenericResponse, ITweetResponse } from "@/types/networkTypes";
 import mongoose from "mongoose";
 import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
-import { createComment, createTweet, toggleLikeTweet, toggleLikeTweetComment } from "@/services/tweetsService";
+import { createComment, createTweet, getTweetById, toggleLikeTweet, toggleLikeTweetComment } from "@/services/tweetsService";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	try {
@@ -20,10 +20,10 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 export async function postComment(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { tweetId } = req.params;
-		const { userProfileUsername } = req;
+		const { userProfile } = req;
 		const { comment } = req.body;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const response: IGenericResponse = await createComment(tweetModel, tweetId, userProfileUsername, comment);
+		const response: IGenericResponse = await createComment(tweetModel, tweetId, userProfile._id, comment);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
@@ -44,12 +44,24 @@ export async function likeTweet(req: Request, res: Response, next: NextFunction)
 	}
 }
 
-export async function likeComment(req: Request, res: Response, next: NextFunction) {
+export async function likeTweetComment(req: Request, res: Response, next: NextFunction) {
 	try {
-		const { tweetId, commendId } = req.params;
+		const { tweetId, commentId } = req.params;
 		const { userProfileUsername } = req;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const response: IGenericResponse = await toggleLikeTweetComment(tweetModel, tweetId, commendId, userProfileUsername);
+		const response: IGenericResponse = await toggleLikeTweetComment(tweetModel, tweetId, commentId, userProfileUsername);
+		return res.status(response.error ? 400 : 200).send(response);
+	} catch (err) {
+		console.error(err);
+		return res.sendStatus(500);
+	}
+}
+
+export async function getTweet(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { tweetId } = req.params;
+		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
+		const response: ITweetResponse = await getTweetById(tweetModel, tweetId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

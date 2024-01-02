@@ -44,6 +44,9 @@ tweetSchema.static("getById", async function (_id: string, lean?: boolean) {
 	if (lean) return await this.findById(_id).lean();
 	return await this.findById(_id);
 });
+tweetSchema.static("getFeedFromAll", async function () {
+	return await this.find({}).limit(20).lean();
+});
 tweetSchema.static("toggleLikeTweet", async function (tweetId: string, userProfileUsername: string) {
 	return await this.updateOne({ _id: tweetId }, [
 		{

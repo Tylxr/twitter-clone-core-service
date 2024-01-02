@@ -25,3 +25,7 @@ export interface IUserProfileResponse extends IGenericResponse {
 export interface ITweetResponse extends IGenericResponse {
 	tweet: ITweetObject | undefined;
 }
+
+export interface IFeedResponse extends IGenericResponse {
+	feed: ITweetObject[];
+}

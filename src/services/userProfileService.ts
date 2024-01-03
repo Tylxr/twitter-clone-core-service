@@ -6,6 +6,8 @@ export async function createUserProfile(username: string, userProfileModel: IGen
 		return { error: true, errorMessage: "Username failed validation." };
 	}
 
+	username = username.toLowerCase();
+
 	try {
 		const existingUserProfile = await userProfileModel.getByUsername(username);
 		if (existingUserProfile) {

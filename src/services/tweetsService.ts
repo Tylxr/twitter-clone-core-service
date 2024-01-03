@@ -6,6 +6,9 @@ export async function createTweet(tweetModel: IGenericTweetModel, userProfile: s
 		return { error: true, errorMessage: "Tweet body provided is invalid." };
 	}
 
+	// TODO: Need to pass tweet repo in to this function so that we can invalidate the cache for `feed_from_user_${username}`.
+	// TODO: Can offload the below logic to the repo method.
+
 	try {
 		const tweetObj = new tweetModel({
 			userProfile: userProfile,

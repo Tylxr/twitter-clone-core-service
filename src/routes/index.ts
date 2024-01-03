@@ -4,8 +4,8 @@ import userProfileRoutes from "./userProfileRoutes";
 import tweetsRoutes from "./tweetsRoutes";
 import feedRoutes from "./feedRoutes";
 import authInstance from "@/connections/authInstance";
-import mongoose, { ObjectId } from "mongoose";
-import { IGenericUserProfileModel, IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
+import mongoose from "mongoose";
+import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 
 const router = express.Router();
 

@@ -28,7 +28,7 @@ export default function Auth<T extends { tokenPayload: { username: string } }>(
 
 			if (response && response.status === 200) {
 				if (req.userProfileUsername !== response.data.tokenPayload.username) {
-					req.userProfileUsername = response.data.tokenPayload.username;
+					req.userProfileUsername = response.data.tokenPayload.username?.toLowerCase();
 					req.userProfile = await userProfileModel.getByUsername(response.data.tokenPayload.username, true);
 				}
 				next();

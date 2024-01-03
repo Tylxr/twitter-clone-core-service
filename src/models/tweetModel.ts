@@ -4,8 +4,7 @@ import { ITweetMongooseDocument, ITweetMongooseModel, ITweetObject } from "@/typ
 // Schema
 const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseModel>({
 	userProfile: {
-		type: mongoose.Types.ObjectId,
-		ref: "UserProfile",
+		type: String,
 	},
 	body: {
 		type: String,
@@ -45,7 +44,17 @@ tweetSchema.static("getById", async function (_id: string, lean?: boolean) {
 	return await this.findById(_id);
 });
 tweetSchema.static("getFeedFromAll", async function () {
-	return await this.find({}).limit(20).lean();
+	// TODO: Pagination at a later date
+	return await this.find({}).limit(20).sort({ createdDate: -1 }).lean();
+});
+tweetSchema.static("getFeedFromUser", async function (username: string) {
+	// TODO: Pagination at a later date
+	return await this.find({
+		userProfile: username,
+	})
+		.limit(20)
+		.sort({ createdDate: -1 })
+		.lean();
 });
 tweetSchema.static("toggleLikeTweet", async function (tweetId: string, userProfileUsername: string) {
 	return await this.updateOne({ _id: tweetId }, [

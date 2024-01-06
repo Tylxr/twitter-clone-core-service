@@ -49,6 +49,7 @@ export interface ITweetMongooseModel extends Model<ITweetMongooseDocument> {
 
 // Repo types
 export interface IGenericTweetRepo {
+	createTweet(userProfile: string, tweet: string): Promise<void>;
 	getFeedFromAll(): Promise<ITweetObject[]>;
 	getFeedFromUser(username: string): Promise<ITweetObject[]>;
 }

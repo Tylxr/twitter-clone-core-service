@@ -1,15 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import { IGenericResponse, ITweetResponse } from "@/types/networkTypes";
 import mongoose from "mongoose";
-import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
+import { IGenericTweetRepo, ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
 import { createComment, createTweet, getTweetById, toggleLikeTweet, toggleLikeTweetComment } from "@/services/tweetsService";
+import { redisClient } from "@/connections/redis";
+import { IGenericCache } from "@/types/cacheTypes";
+import TweetRepository from "@/repositories/tweetRepo";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { userProfileUsername } = req;
 		const { tweet } = req.body;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const response: IGenericResponse = await createTweet(tweetModel, userProfileUsername, tweet);
+		const cache: IGenericCache = redisClient;
+		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+		const response: IGenericResponse = await createTweet(tweetRepo, userProfileUsername, tweet);
 		return res.status(response.error ? 400 : 201).send(response);
 	} catch (err) {
 		console.error(err);

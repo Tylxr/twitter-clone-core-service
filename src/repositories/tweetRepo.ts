@@ -10,6 +10,31 @@ export default class TweetRepository implements IGenericTweetRepo {
 		this.cache = cache;
 	}
 
+	public async createTweet(userProfile: string, tweet: string): Promise<void> {
+		try {
+			const tweetObj = new this.tweetModel({
+				userProfile: userProfile,
+				body: tweet,
+				comments: [],
+				likes: [],
+				createdDate: new Date(),
+			});
+			await tweetObj.save();
+		} catch (err) {
+			console.error(err);
+			throw new Error("Unable to create tweet for user: " + userProfile);
+		}
+
+		try {
+			// Remove this user's cached feed
+			await this.cache.delete(`feed_from_user_${userProfile}`);
+			console.log(`Removed ${userProfile}'s feed from the cache as a new tweet was created.`);
+		} catch (err) {
+			console.error(err);
+			throw new Error("Unable to invalidate feed cache for: feed_from_user_" + userProfile);
+		}
+	}
+
 	public async getFeedFromAll(): Promise<ITweetObject[]> {
 		const cachedFeed: ITweetObject[] = await this.cache.get("feed_from_all");
 		if (cachedFeed) {

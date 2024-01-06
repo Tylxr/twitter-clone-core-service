@@ -1,23 +1,17 @@
 import { IGenericResponse, ITweetResponse } from "@/types/networkTypes";
-import { IGenericTweetModel, ITweetObject } from "@/types/tweetTypes";
+import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
 
-export async function createTweet(tweetModel: IGenericTweetModel, userProfile: string, tweet: string): Promise<IGenericResponse> {
+export async function createTweet(tweetRepo: IGenericTweetRepo, userProfile: string, tweet: string): Promise<IGenericResponse> {
 	if (typeof tweet !== "string" || tweet.length === 0 || tweet.length > 150) {
 		return { error: true, errorMessage: "Tweet body provided is invalid." };
 	}
 
-	// TODO: Need to pass tweet repo in to this function so that we can invalidate the cache for `feed_from_user_${username}`.
-	// TODO: Can offload the below logic to the repo method.
+	if (typeof userProfile !== "string" || userProfile.length < 4 || userProfile.length > 25) {
+		return { error: true, errorMessage: "UserProfile provided is invalid." };
+	}
 
 	try {
-		const tweetObj = new tweetModel({
-			userProfile: userProfile,
-			body: tweet,
-			comments: [],
-			likes: [],
-			createdDate: new Date(),
-		});
-		await tweetObj.save();
+		await tweetRepo.createTweet(userProfile, tweet);
 		return { error: false, message: "Tweet posted successfully." };
 	} catch (err) {
 		console.error(err);

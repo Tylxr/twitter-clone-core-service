@@ -29,9 +29,13 @@ export default class TweetRepository implements IGenericTweetRepo {
 			// Remove this user's cached feed
 			await this.cache.delete(`feed_from_user_${userProfile}`);
 			console.log(`Removed ${userProfile}'s feed from the cache as a new tweet was created.`);
+
+			// Remove 'from all' cached feed
+			await this.cache.delete("feed_from_all");
+			console.log(`Removed 'feed from all' from the cache as a new tweet was created.`);
 		} catch (err) {
 			console.error(err);
-			throw new Error("Unable to invalidate feed cache for: feed_from_user_" + userProfile);
+			throw new Error("Unable to invalidate feed cache.");
 		}
 	}
 
@@ -52,6 +56,16 @@ export default class TweetRepository implements IGenericTweetRepo {
 				console.error(err);
 				throw new Error("Unable to retrieve 'feed from all' from DB.");
 			}
+		}
+	}
+
+	public async checkFeedFromAll(tweetId: string): Promise<boolean> {
+		try {
+			const latestTweetId = await this.tweetModel.getLatestTweetId();
+			return tweetId === latestTweetId;
+		} catch (err) {
+			console.error(err);
+			throw new Error("Unable to check 'feed from all' from DB.");
 		}
 	}
 

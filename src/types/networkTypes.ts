@@ -29,3 +29,7 @@ export interface ITweetResponse extends IGenericResponse {
 export interface IFeedResponse extends IGenericResponse {
 	feed: ITweetObject[];
 }
+
+export interface IFeedFromAllCheckResponse extends IGenericResponse {
+	latest?: boolean;
+}

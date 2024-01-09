@@ -1,4 +1,4 @@
-import { IFeedResponse } from "@/types/networkTypes";
+import { IFeedFromAllCheckResponse, IFeedResponse } from "@/types/networkTypes";
 import { IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
 
 export async function fromAll(tweetRepo: IGenericTweetRepo): Promise<IFeedResponse> {
@@ -8,6 +8,17 @@ export async function fromAll(tweetRepo: IGenericTweetRepo): Promise<IFeedRespon
 	} catch (err) {
 		console.error(err);
 		return { error: true, errorMessage: "Error posting a tweet.", feed: [] };
+	}
+}
+
+export async function checkFromAll(tweetRepo: IGenericTweetRepo, tweetId: string): Promise<IFeedFromAllCheckResponse> {
+	if (!tweetId) return { error: true, errorMessage: "No tweetId provided." };
+	try {
+		const latest: boolean = await tweetRepo.checkFeedFromAll(tweetId);
+		return { error: false, latest };
+	} catch (err) {
+		console.error(err);
+		return { error: true, errorMessage: "Error checking feed from all." };
 	}
 }
 

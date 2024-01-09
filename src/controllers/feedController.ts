@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-import { IFeedResponse } from "@/types/networkTypes";
-import mongoose from "mongoose";
+import { IFeedFromAllCheckResponse, IFeedResponse } from "@/types/networkTypes";
+import mongoose, { isValidObjectId } from "mongoose";
 import { IGenericTweetRepo, ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
 import TweetRepository from "@/repositories/tweetRepo";
 import { IGenericCache } from "@/types/cacheTypes";
 import { redisClient } from "@/connections/redis";
-import { fromAll, fromUser } from "@/services/feedService";
+import { checkFromAll, fromAll, fromUser } from "@/services/feedService";
 
 export async function getFeedFromAll(req: Request, res: Response, next: NextFunction) {
 	try {
@@ -13,6 +13,25 @@ export async function getFeedFromAll(req: Request, res: Response, next: NextFunc
 		const cache: IGenericCache = redisClient;
 		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
 		const response: IFeedResponse = await fromAll(tweetRepo);
+		return res.status(response.error ? 400 : 200).send(response);
+	} catch (err) {
+		console.error(err);
+		return res.sendStatus(500);
+	}
+}
+
+export async function checkFeedFromAll(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { tweetId } = req.body;
+		// Check tweetId is valid using a mongoose concrete method
+		if (!isValidObjectId(tweetId)) {
+			return res.status(400).send({ error: true, errorMessage: `Invalid tweetId provided - unable to cast '${tweetId}' to ObjectId.` });
+		}
+
+		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
+		const cache: IGenericCache = redisClient;
+		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+		const response: IFeedFromAllCheckResponse = await checkFromAll(tweetRepo, tweetId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

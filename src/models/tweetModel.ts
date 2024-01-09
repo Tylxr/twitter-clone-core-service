@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, ObjectId } from "mongoose";
 import { ITweetMongooseDocument, ITweetMongooseModel, ITweetObject } from "@/types/tweetTypes";
 
 // Schema
@@ -99,6 +99,14 @@ tweetSchema.static("postComment", async function (tweetId: string, userProfileId
 			},
 		},
 	);
+});
+tweetSchema.static("getLatestTweetId", async function () {
+	return await this.findOne({})
+		.limit(1)
+		.sort({ createdDate: -1 })
+		.select("_id")
+		.lean()
+		.then(({ _id }: { _id: ObjectId }) => _id.toString());
 });
 
 // Indexes

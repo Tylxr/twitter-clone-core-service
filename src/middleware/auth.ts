@@ -37,7 +37,7 @@ export default function Auth<T extends { tokenPayload: { username: string } }>(
 			}
 		} catch (err) {
 			console.error(err.message);
-			return res.status(401).send({ errorMessage: err.message || "Authentication failed." });
+			return res.status(401).send({ errorMessage: "Authentication failed." });
 		}
 	};
 }

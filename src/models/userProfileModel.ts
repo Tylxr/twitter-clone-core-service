@@ -10,6 +10,12 @@ const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUser
 		maxLength: 25,
 		required: true,
 	},
+	name: {
+		type: String,
+		minLength: 4,
+		maxLength: 25,
+		required: true,
+	},
 	bio: {
 		type: String,
 		maxLength: 200,

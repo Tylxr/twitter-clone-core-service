@@ -1,9 +1,12 @@
 import { IGenericResponse, IUserProfileResponse } from "@/types/networkTypes";
 import { IGenericUserProfileModel, IGenericUserProfileRepo } from "@/types/userProfileTypes";
 
-export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
+export async function createUserProfile(username: string, name: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
 	if (!username || username.length < 4) {
 		return { error: true, errorMessage: "Username failed validation." };
+	}
+	if (!name || name.length < 4) {
+		return { error: true, errorMessage: "Name failed validation." };
 	}
 
 	username = username.toLowerCase();
@@ -13,7 +16,7 @@ export async function createUserProfile(username: string, userProfileModel: IGen
 		if (existingUserProfile) {
 			return { error: true, errorMessage: `Existing user profile found for username ${username}.` };
 		}
-		const userProfile = new userProfileModel({ username, bio: "", followers: [], following: [], createdDate: new Date() });
+		const userProfile = new userProfileModel({ username, name, bio: "", followers: [], following: [], createdDate: new Date() });
 		await userProfile.save();
 		return { error: false, message: "Resource created successfully." };
 	} catch (err) {

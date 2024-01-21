@@ -1,10 +1,10 @@
 import { Model, Document, ObjectId } from "mongoose";
-import { IGenericResponse } from "./networkTypes";
 
 // Generic types
 export interface IUserProfileObject {
 	_id?: string;
 	username: string;
+	name: string;
 	bio: string;
 	followers: Array<string>;
 	following: Array<string>;

@@ -10,10 +10,11 @@ export default function Auth<T extends { tokenPayload: { username: string } }>(
 		try {
 			const token = req.headers.authorization && req.headers.authorization.split("Bearer ")?.[1];
 			if (!token) {
-				throw Error("No bearer token supplied.");
+				throw new Error("No bearer token supplied.");
 			}
 			if (token === process.env.CORE_SERVER_TOKEN) {
-				console.log("Skipping auth request - server token provided.");
+				// TODO: Check origin as well for added security
+				console.log("Skipping auth request - admin token provided.");
 				return next();
 			}
 			const response = await authNetworkInstance.post(

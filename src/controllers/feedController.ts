@@ -16,14 +16,13 @@ export async function getFeedFromAll(req: Request, res: Response, next: NextFunc
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }
 
 export async function checkFeedFromAll(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { tweetId } = req.body;
-		// Check tweetId is valid using a mongoose concrete method
 		if (!isValidObjectId(tweetId)) {
 			return res.status(400).send({ error: true, errorMessage: `Invalid tweetId provided - unable to cast '${tweetId}' to ObjectId.` });
 		}
@@ -35,7 +34,7 @@ export async function checkFeedFromAll(req: Request, res: Response, next: NextFu
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }
 
@@ -49,6 +48,6 @@ export async function getFeedFromUser(req: Request, res: Response, next: NextFun
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }

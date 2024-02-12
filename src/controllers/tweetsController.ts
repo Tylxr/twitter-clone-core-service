@@ -18,7 +18,7 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 		return res.status(response.error ? 400 : 201).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }
 
@@ -32,7 +32,7 @@ export async function postComment(req: Request, res: Response, next: NextFunctio
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }
 
@@ -45,7 +45,7 @@ export async function likeTweet(req: Request, res: Response, next: NextFunction)
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }
 
@@ -58,7 +58,7 @@ export async function likeTweetComment(req: Request, res: Response, next: NextFu
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }
 
@@ -70,6 +70,6 @@ export async function getTweet(req: Request, res: Response, next: NextFunction) 
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
-		return res.sendStatus(500);
+		return res.status(500).send({ error: true });
 	}
 }

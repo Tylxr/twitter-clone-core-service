@@ -1,4 +1,4 @@
-import { Model, Document, ObjectId } from "mongoose";
+import { Model, Document } from "mongoose";
 
 // Generic types
 export interface IUserProfileObject {
@@ -8,6 +8,8 @@ export interface IUserProfileObject {
 	bio: string;
 	followers: Array<string>;
 	following: Array<string>;
+	followersFormatted?: string;
+	followingFormatted?: string;
 	createdDate: Date;
 }
 

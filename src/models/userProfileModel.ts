@@ -2,38 +2,58 @@ import mongoose, { Schema } from "mongoose";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
 
 // Schema
-const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUserProfileMongooseModel>({
-	username: {
-		type: String,
-		unique: true,
-		minLength: 4,
-		maxLength: 25,
-		required: true,
-	},
-	name: {
-		type: String,
-		minLength: 4,
-		maxLength: 25,
-		required: true,
-	},
-	bio: {
-		type: String,
-		maxLength: 200,
-	},
+const userProfileSchema: Schema = new Schema<IUserProfileMongooseDocument, IUserProfileMongooseModel>(
+	{
+		username: {
+			type: String,
+			unique: true,
+			minLength: 4,
+			maxLength: 25,
+			required: true,
+		},
+		name: {
+			type: String,
+			minLength: 4,
+			maxLength: 25,
+			required: true,
+		},
+		bio: {
+			type: String,
+			maxLength: 200,
+		},
 
-	// Type of [String] avoids the case where we would have millions of user profiles populated for
-	// a user. This forces us to manually lookup followers/following accounts when they are needed,
-	// which is an operation that isn't as popular and can be paginated if needed.
-	followers: {
-		type: [String],
+		// Type of [String] avoids the case where we would have millions of user profiles populated for
+		// a user. This forces us to manually lookup followers/following accounts when they are needed,
+		// which is an operation that isn't as popular and can be paginated if needed.
+		followers: {
+			type: [String],
+		},
+		following: {
+			type: [String],
+		},
+		createdDate: {
+			type: Date,
+			default: Date.now(),
+		},
 	},
-	following: {
-		type: [String],
+	{
+		// Enable virtuals to be included when calling toObject
+		toObject: { virtuals: true },
 	},
-	createdDate: {
-		type: Date,
-		default: Date.now(),
-	},
+);
+
+// Virtuals
+userProfileSchema.virtual("followersFormatted").get(function () {
+	const followers: number = this.followers.length;
+	if (followers === 0 || followers < 1000) return followers.toString();
+	if (followers > 1000000) return (followers / 1000000).toString().substr(0, 4) + "m";
+	if (followers > 1000) return (followers / 1000).toString().substr(0, 3) + "k";
+});
+userProfileSchema.virtual("followingFormatted").get(function () {
+	const following: number = this.following.length;
+	if (following === 0 || following < 1000) return following.toString();
+	if (following > 1000000) return (following / 1000000).toString().substr(0, 4) + "m";
+	if (following > 1000) return (following / 1000).toString().substr(0, 3) + "k";
 });
 
 // Statics

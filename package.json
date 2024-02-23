@@ -28,7 +28,6 @@
 		"@types/node": "^20.8.4",
 		"mongoose": "^7.6.1",
 		"nodemon": "^3.0.1",
-		"ts-node": "^10.9.1",
 		"tsx": "^3.14.0",
 		"typescript": "^5.2.2"
 	}

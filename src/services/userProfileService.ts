@@ -54,13 +54,16 @@ export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRe
 	}
 }
 
-export async function updateUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string, bio: string): Promise<IGenericResponse> {
-	if (typeof bio !== "string" || bio.length > 200) {
+export async function updateUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string, data: {bio: string, name: string}): Promise<IGenericResponse> {
+	if (typeof data.bio !== "string" || data.bio.length > 200) {
 		return { error: true, errorMessage: "Invalid bio provided." };
+	}
+	if (typeof data.name !== "string" || data.name.length < 4 || data.name.length > 25) {
+		return { error: true, errorMessage: "Invalid name provided." };
 	}
 
 	try {
-		await userProfileRepo.updateUserProfile(username, bio);
+		await userProfileRepo.updateUserProfile(username, data);
 		return { error: false };
 	} catch (err) {
 		console.error(err);

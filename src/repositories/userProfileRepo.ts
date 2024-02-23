@@ -32,11 +32,12 @@ export default class UserProfileRepository implements IGenericUserProfileRepo {
 		}
 	}
 
-	public async updateUserProfile(username: string, bio: string): Promise<void> {
+	public async updateUserProfile(username: string, data: { bio: string; name: string }): Promise<void> {
 		try {
 			const existingUserProfile = await this.userProfileModel.getByUsername(username);
 			if (!existingUserProfile) throw new Error("No user profile found for user with username: " + username);
-			existingUserProfile.bio = bio;
+			existingUserProfile.bio = data.bio;
+			existingUserProfile.name = data.name;
 			await existingUserProfile.save();
 			await this.cache.delete(`user_profile_${username}`);
 		} catch (err) {

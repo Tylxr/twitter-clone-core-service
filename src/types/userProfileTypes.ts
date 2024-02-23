@@ -39,5 +39,5 @@ export interface IUserProfileMongooseModel extends Model<IUserProfileMongooseDoc
 // Repo types
 export interface IGenericUserProfileRepo {
 	retrieveUserProfile(username: string): Promise<IUserProfileObject | null>;
-	updateUserProfile(username: string, bio: string): Promise<void>;
+	updateUserProfile(username: string, data: { bio: string; name: string }): Promise<void>;
 }

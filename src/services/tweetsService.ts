@@ -1,12 +1,13 @@
 import { IGenericResponse, ITweetResponse } from "@/types/networkTypes";
 import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
+import { IUserProfileObject } from "@/types/userProfileTypes";
 
-export async function createTweet(tweetRepo: IGenericTweetRepo, userProfile: string, tweet: string): Promise<IGenericResponse> {
+export async function createTweet(tweetRepo: IGenericTweetRepo, userProfile: IUserProfileObject, tweet: string): Promise<IGenericResponse> {
 	if (typeof tweet !== "string" || tweet.length === 0 || tweet.length > 150) {
 		return { error: true, errorMessage: "Tweet body provided is invalid." };
 	}
 
-	if (typeof userProfile !== "string" || userProfile.length < 4 || userProfile.length > 25) {
+	if (!userProfile || !userProfile.hasOwnProperty("name") || !userProfile.hasOwnProperty("username")) {
 		return { error: true, errorMessage: "UserProfile provided is invalid." };
 	}
 

@@ -1,5 +1,6 @@
 import { IGenericCache } from "@/types/cacheTypes";
 import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
+import { IUserProfileObject } from "@/types/userProfileTypes";
 
 export default class TweetRepository implements IGenericTweetRepo {
 	private tweetModel: IGenericTweetModel;
@@ -10,7 +11,7 @@ export default class TweetRepository implements IGenericTweetRepo {
 		this.cache = cache;
 	}
 
-	public async createTweet(userProfile: string, tweet: string): Promise<void> {
+	public async createTweet(userProfile: IUserProfileObject, tweet: string): Promise<void> {
 		try {
 			const tweetObj = new this.tweetModel({
 				userProfile: userProfile,

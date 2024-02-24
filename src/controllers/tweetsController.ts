@@ -9,12 +9,12 @@ import TweetRepository from "@/repositories/tweetRepo";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	try {
-		const { userProfileUsername } = req;
+		const { userProfile } = req;
 		const { tweet } = req.body;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 		const cache: IGenericCache = redisClient;
 		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
-		const response: IGenericResponse = await createTweet(tweetRepo, userProfileUsername, tweet);
+		const response: IGenericResponse = await createTweet(tweetRepo, userProfile, tweet);
 		return res.status(response.error ? 400 : 201).send(response);
 	} catch (err) {
 		console.error(err);

@@ -1,5 +1,5 @@
 import mongoose, { Schema, ObjectId } from "mongoose";
-import { ITweetMongooseDocument, ITweetMongooseModel, ITweetObject } from "@/types/tweetTypes";
+import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
 
 // Schema
 const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseModel>({

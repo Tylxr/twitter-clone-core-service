@@ -5,7 +5,7 @@ import routes from "./routes";
 import cors from "cors";
 
 const corsOptions = {
-	origin: "http://localhost:3000", // client
+	origin: ["http://localhost:3000", "http://localhost:2000"], // client & auth
 	credentials: true,
 };
 

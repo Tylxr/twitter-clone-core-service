@@ -16,6 +16,7 @@ export interface IUserProfileObject {
 // Document methods live in here
 export interface IUserProfileDocument extends IUserProfileObject {
 	save(): Promise<IUserProfileObject>;
+	toObject(): IUserProfileObject;
 }
 
 // Generic Tweet ORM model - statics live in here

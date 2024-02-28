@@ -46,7 +46,15 @@ tweetSchema.static("getById", async function (_id: string, lean?: boolean) {
 });
 tweetSchema.static("getFeedFromAll", async function () {
 	// TODO: Pagination at a later date
-	return await this.find({}).populate("userProfile").limit(20).sort({ createdDate: -1 }).lean();
+	return await this.find({})
+		.populate({
+			path: "userProfile",
+			model: "UserProfile",
+			select: "_id username name",
+		})
+		.limit(20)
+		.sort({ createdDate: -1 })
+		.lean();
 });
 tweetSchema.static("getFeedFromUser", async function (username: string) {
 	// TODO: Pagination at a later date

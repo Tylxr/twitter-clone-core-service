@@ -49,7 +49,7 @@ export default class TweetRepository implements IGenericTweetRepo {
 			try {
 				const feed = await this.tweetModel.getFeedFromAll();
 				if (feed.length > 0) {
-					await this.cache.set("feed_from_all", feed, { EX: 60 * 60 });
+					await this.cache.set("feed_from_all", feed, { EX: 60 });
 					console.log("Unable to find 'feed_from_all' in the cache. Updating cache. Pulled record from DB.");
 				}
 				return feed;
@@ -79,7 +79,7 @@ export default class TweetRepository implements IGenericTweetRepo {
 			try {
 				const feed = await this.tweetModel.getFeedFromUser(username);
 				if (feed.length > 0) {
-					await this.cache.set(`feed_from_user_${username}`, feed, { EX: 60 * 60 * 6 });
+					await this.cache.set(`feed_from_user_${username}`, feed, { EX: 60 * 3 });
 					console.log("Unable to find 'feed_from_all' in the cache. Updating cache. Pulled record from DB.");
 				}
 				return feed;

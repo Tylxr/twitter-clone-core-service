@@ -22,13 +22,13 @@ export async function checkFromAll(tweetRepo: IGenericTweetRepo, tweetId: string
 	}
 }
 
-export async function fromUser(tweetRepo: IGenericTweetRepo, username: string): Promise<IFeedResponse> {
-	if (!username || username.length < 4) {
-		return { error: true, errorMessage: "Invalid username provided.", feed: [] };
+export async function fromUser(tweetRepo: IGenericTweetRepo, userId: string): Promise<IFeedResponse> {
+	if (!userId) {
+		return { error: true, errorMessage: "Invalid userId provided.", feed: [] };
 	}
 
 	try {
-		const feed: ITweetObject[] = await tweetRepo.getFeedFromUser(username);
+		const feed: ITweetObject[] = await tweetRepo.getFeedFromUser(userId);
 		return { error: false, feed };
 	} catch (err) {
 		console.error(err);

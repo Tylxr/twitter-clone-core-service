@@ -6,6 +6,8 @@ import TweetRepository from "@/repositories/tweetRepo";
 import { IGenericCache } from "@/types/cacheTypes";
 import { redisClient } from "@/connections/redis";
 import { checkFromAll, fromAll, fromUser } from "@/services/feedService";
+import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
+import { retrieveUserIdByUsername } from "@/services/userProfileService";
 
 export async function getFeedFromAll(req: Request, res: Response, next: NextFunction) {
 	try {
@@ -41,10 +43,17 @@ export async function checkFeedFromAll(req: Request, res: Response, next: NextFu
 export async function getFeedFromUser(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { username } = req.params;
+
+		// Grab the userId using the username
+		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
+		const userIdResponse = await retrieveUserIdByUsername(userProfileModel, username);
+		if (userIdResponse.error) return res.status(400).send({ error: userIdResponse.error, errorMessage: userIdResponse.errorMessage });
+
+		// Grab the tweets that match the userId
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 		const cache: IGenericCache = redisClient;
 		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
-		const response: IFeedResponse = await fromUser(tweetRepo, username);
+		const response: IFeedResponse = await fromUser(tweetRepo, userIdResponse.userId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

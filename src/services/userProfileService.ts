@@ -1,4 +1,4 @@
-import { IGenericResponse, IUserProfileResponse } from "@/types/networkTypes";
+import { IGenericResponse, IUserProfileIdResponse, IUserProfileResponse } from "@/types/networkTypes";
 import { IGenericUserProfileModel, IGenericUserProfileRepo } from "@/types/userProfileTypes";
 
 export async function createUserProfile(username: string, userProfileModel: IGenericUserProfileModel): Promise<IGenericResponse> {
@@ -41,6 +41,20 @@ export async function deleteUserProfile(username: string, userProfileModel: IGen
 	}
 }
 
+export async function retrieveUserIdByUsername(userProfileModel: IGenericUserProfileModel, username: string): Promise<IUserProfileIdResponse> {
+	if (!username || username.length < 4) {
+		return { error: true, errorMessage: "Invalid username provided.", userId: undefined };
+	}
+
+	try {
+		const userId = await userProfileModel.getIdByUsername(username);
+		return { error: false, userId };
+	} catch (err) {
+		console.error(err);
+		return { error: true, errorMessage: "Error deleting user profile.", userId: undefined };
+	}
+}
+
 export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string): Promise<IUserProfileResponse> {
 	if (!username || username.length < 4) {
 		return { error: true, errorMessage: "Invalid username provided.", userProfile: null };
@@ -54,7 +68,11 @@ export async function retrieveUserProfile(userProfileRepo: IGenericUserProfileRe
 	}
 }
 
-export async function updateUserProfile(userProfileRepo: IGenericUserProfileRepo, username: string, data: {bio: string, name: string}): Promise<IGenericResponse> {
+export async function updateUserProfile(
+	userProfileRepo: IGenericUserProfileRepo,
+	username: string,
+	data: { bio: string; name: string },
+): Promise<IGenericResponse> {
 	if (typeof data.bio !== "string" || data.bio.length > 200) {
 		return { error: true, errorMessage: "Invalid bio provided." };
 	}

@@ -70,22 +70,22 @@ export default class TweetRepository implements IGenericTweetRepo {
 		}
 	}
 
-	public async getFeedFromUser(username: string): Promise<ITweetObject[]> {
-		const cachedFeed: ITweetObject[] = await this.cache.get(`feed_from_user_${username}`);
+	public async getFeedFromUser(userId: string): Promise<ITweetObject[]> {
+		const cachedFeed: ITweetObject[] = await this.cache.get(`feed_from_user_${userId}`);
 		if (cachedFeed) {
-			console.log(`The feed for user: ${username} was found in cache. Returning cached feed.`);
+			console.log(`The feed for user: ${userId} was found in cache. Returning cached feed.`);
 			return cachedFeed;
 		} else {
 			try {
-				const feed = await this.tweetModel.getFeedFromUser(username);
+				const feed = await this.tweetModel.getFeedFromUser(userId);
 				if (feed.length > 0) {
-					await this.cache.set(`feed_from_user_${username}`, feed, { EX: 60 * 3 });
+					await this.cache.set(`feed_from_user_${userId}`, feed, { EX: 60 * 3 });
 					console.log("Unable to find 'feed_from_all' in the cache. Updating cache. Pulled record from DB.");
 				}
 				return feed;
 			} catch (err) {
 				console.error(err);
-				throw new Error(`Unable to retrieve 'feed for user' from DB for user: ${username}`);
+				throw new Error(`Unable to retrieve 'feed for user' from DB for user: ${userId}`);
 			}
 		}
 	}

@@ -22,6 +22,10 @@ export interface IUserProfileResponse extends IGenericResponse {
 	userProfile: IUserProfileObject | undefined;
 }
 
+export interface IUserProfileIdResponse extends IGenericResponse {
+	userId: string | undefined;
+}
+
 export interface ITweetResponse extends IGenericResponse {
 	tweet: ITweetObject | undefined;
 }

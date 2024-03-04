@@ -37,13 +37,36 @@ export default class UserProfileRepository implements IGenericUserProfileRepo {
 		try {
 			const existingUserProfile = await this.userProfileModel.getByUsername(username);
 			if (!existingUserProfile) throw new Error("No user profile found for user with username: " + username);
+
+			// Update userprofile
 			existingUserProfile.bio = data.bio;
 			existingUserProfile.name = data.name;
 			await existingUserProfile.save();
+
+			// Invalidate cache
 			await this.cache.delete(`user_profile_${username}`);
 		} catch (err) {
 			console.error(err);
 			throw new Error("Error updating user with username: " + username);
+		}
+	}
+
+	public async toggleFollowUser(username: string, userProfileUsername: string): Promise<void> {
+		try {
+			// Toggle follow
+			await this.userProfileModel.toggleFollow(username, userProfileUsername);
+		} catch (err) {
+			console.error(err);
+			throw new Error(`Unable to toggle follow of ${username} for ${userProfileUsername}.`);
+		}
+
+		try {
+			// Invalidate cache
+			await this.cache.delete(`user_profile_${username}`);
+			await this.cache.delete(`user_profile_${userProfileUsername}`);
+		} catch (err) {
+			console.error(err);
+			throw new Error(`Unable to invalidate cache for "user_profile_${username}" or "user_profile_${userProfileUsername}".`);
 		}
 	}
 }

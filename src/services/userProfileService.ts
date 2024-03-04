@@ -89,7 +89,7 @@ export async function updateUserProfile(
 	}
 }
 
-export async function toggleFollowUser(userProfileModel: IGenericUserProfileModel, username: string, userProfileUsername: string): Promise<IGenericResponse> {
+export async function toggleFollowUser(userProfileRepo: IGenericUserProfileRepo, username: string, userProfileUsername: string): Promise<IGenericResponse> {
 	if (!username) {
 		return { error: true, errorMessage: "No/invalid username provided." };
 	}
@@ -101,7 +101,7 @@ export async function toggleFollowUser(userProfileModel: IGenericUserProfileMode
 	}
 
 	try {
-		await userProfileModel.toggleFollow(username, userProfileUsername);
+		await userProfileRepo.toggleFollowUser(username, userProfileUsername);
 		return { error: false };
 	} catch (err) {
 		console.error(err);

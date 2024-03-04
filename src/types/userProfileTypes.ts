@@ -43,4 +43,5 @@ export interface IUserProfileMongooseModel extends Model<IUserProfileMongooseDoc
 export interface IGenericUserProfileRepo {
 	retrieveUserProfile(username: string): Promise<IUserProfileObject | null>;
 	updateUserProfile(username: string, data: { bio: string; name: string }): Promise<void>;
+	toggleFollowUser(username: string, userProfileUsername: string): Promise<void>;
 }

@@ -1,6 +1,5 @@
 import { Model, Document, ObjectId } from "mongoose";
 import { IUserProfileMongooseDocument, IUserProfileObject } from "./userProfileTypes";
-import { IFeedResponse } from "./networkTypes";
 
 // Generic types
 export interface ITweetObject {
@@ -55,4 +54,5 @@ export interface IGenericTweetRepo {
 	getFeedFromAll(): Promise<ITweetObject[]>;
 	checkFeedFromAll(tweetId: string): Promise<boolean>;
 	getFeedFromUser(username: string): Promise<ITweetObject[]>;
+	toggleLike(tweetId: string, userProfileUsername: string, tweetUser: string): Promise<void>;
 }

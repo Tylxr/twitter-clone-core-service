@@ -1,3 +1,4 @@
+import { ITweetMongooseDocument } from "@/types/tweetTypes";
 import { IUserProfileObject } from "@/types/userProfileTypes";
 
 export {};
@@ -7,6 +8,7 @@ declare global {
 		export interface Request {
 			userProfile?: IUserProfileObject;
 			userProfileUsername?: string;
+			tweet: ITweetMongooseDocument;
 		}
 	}
 }

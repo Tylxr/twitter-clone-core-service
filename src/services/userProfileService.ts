@@ -90,12 +90,21 @@ export async function updateUserProfile(
 }
 
 export async function toggleFollowUser(userProfileModel: IGenericUserProfileModel, username: string, userProfileUsername: string): Promise<IGenericResponse> {
-	if (!username) return { error: true, errorMessage: "No/invalid username provided." };
+	if (!username) {
+		return { error: true, errorMessage: "No/invalid username provided." };
+	}
+	if (!userProfileUsername) {
+		return { error: true, errorMessage: "Unable to determine originating user profile." };
+	}
+	if (username.toLowerCase() === userProfileUsername.toLowerCase()) {
+		return { error: true, errorMessage: "Following your own account is not permitted." };
+	}
+
 	try {
 		await userProfileModel.toggleFollow(username, userProfileUsername);
 		return { error: false };
 	} catch (err) {
 		console.error(err);
-		return { error: true, errorMessage: "Error trying to follower user " + username };
+		return { error: true, errorMessage: `Error trying to follower user ${username}.` };
 	}
 }

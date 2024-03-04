@@ -49,7 +49,7 @@ export default class TweetRepository implements IGenericTweetRepo {
 			try {
 				const feed = await this.tweetModel.getFeedFromAll();
 				if (feed.length > 0) {
-					await this.cache.set("feed_from_all", feed, { EX: 60 });
+					await this.cache.set("feed_from_all", feed, { EX: 60 * 60 });
 					console.log("Unable to find 'feed_from_all' in the cache. Updating cache. Pulled record from DB.");
 				}
 				return feed;
@@ -79,7 +79,7 @@ export default class TweetRepository implements IGenericTweetRepo {
 			try {
 				const feed = await this.tweetModel.getFeedFromUser(userId);
 				if (feed.length > 0) {
-					await this.cache.set(`feed_from_user_${userId}`, feed, { EX: 60 * 3 });
+					await this.cache.set(`feed_from_user_${userId}`, feed, { EX: 60 * 60 });
 					console.log("Unable to find 'feed_from_all' in the cache. Updating cache. Pulled record from DB.");
 				}
 				return feed;
@@ -88,5 +88,16 @@ export default class TweetRepository implements IGenericTweetRepo {
 				throw new Error(`Unable to retrieve 'feed for user' from DB for user: ${userId}`);
 			}
 		}
+	}
+
+	public async toggleLike(tweetId: string, userProfileUsername: string, tweetUserId: string): Promise<void> {
+		// Toggle like
+		await this.tweetModel.toggleLikeTweet(tweetId, userProfileUsername);
+
+		// Invalidate cache for feed and user feed
+		await this.cache.delete(`feed_from_user_${tweetUserId}`);
+		console.log(`Removed ${tweetUserId}'s feed from the cache as a tweet was liked.`);
+		await this.cache.delete("feed_from_all");
+		console.log(`Removed 'feed from all' from the cache as a tweet was liked.`);
 	}
 }

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export default async () => {
-	console.log(`Attempting to connect to mongo instance...`);
+	console.log("Attempting to connect to mongo instance...");
 
 	try {
 		const mongoDBConnectionString = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:27017/${process.env.MONGODB_DB}?authSource=admin`;

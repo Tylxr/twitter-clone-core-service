@@ -5,3 +5,5 @@ export interface IGenericCache {
 	listen(eventName: string, callback: (message: string) => void): Promise<void>;
 	delete(key: string): Promise<boolean>;
 }
+
+export type SocketEmitter = (name: string, payload?: any) => void;

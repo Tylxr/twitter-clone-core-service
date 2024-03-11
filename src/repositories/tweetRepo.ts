@@ -1,14 +1,17 @@
-import { IGenericCache } from "@/types/cacheTypes";
+import { emit } from "@/connections/socketio";
+import { IGenericCache, SocketEmitter } from "@/types/miscTypes";
 import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
 import { IUserProfileObject } from "@/types/userProfileTypes";
 
 export default class TweetRepository implements IGenericTweetRepo {
 	private tweetModel: IGenericTweetModel;
 	private cache: IGenericCache;
+	private emit: SocketEmitter;
 
-	constructor(tweetModel: IGenericTweetModel, cache: IGenericCache) {
+	constructor(tweetModel: IGenericTweetModel, cache: IGenericCache, emitter?: SocketEmitter) {
 		this.tweetModel = tweetModel;
 		this.cache = cache;
+		this.emit = emitter;
 	}
 
 	public async createTweet(userProfile: IUserProfileObject, tweet: string): Promise<void> {
@@ -21,6 +24,8 @@ export default class TweetRepository implements IGenericTweetRepo {
 				createdDate: new Date(),
 			});
 			await tweetObj.save();
+
+			this.emit("POST_CREATED");
 		} catch (err) {
 			console.error(err);
 			throw new Error("Unable to create tweet for user: " + userProfile);

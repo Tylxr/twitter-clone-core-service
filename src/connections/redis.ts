@@ -1,10 +1,10 @@
-import { IGenericCache } from "@/types/cacheTypes";
+import { IGenericCache } from "@/types/miscTypes";
 import { createClient, RedisClientType, SetOptions } from "redis";
 
 let CLIENT: RedisClientType | undefined;
 let CLIENT_LISTENER: RedisClientType | undefined;
 
-export const connectToRedis = async () => {
+export default async () => {
 	try {
 		console.log("Attempting to connect to Redis...");
 		CLIENT = createClient({

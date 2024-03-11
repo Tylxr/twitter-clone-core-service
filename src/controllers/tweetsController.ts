@@ -4,8 +4,9 @@ import mongoose from "mongoose";
 import { IGenericTweetRepo, ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
 import { createComment, createTweet, getTweetById, toggleLikeTweet, toggleLikeTweetComment } from "@/services/tweetsService";
 import { redisClient } from "@/connections/redis";
-import { IGenericCache } from "@/types/cacheTypes";
+import { IGenericCache } from "@/types/miscTypes";
 import TweetRepository from "@/repositories/tweetRepo";
+import { emit } from "@/connections/socketio";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	try {
@@ -13,7 +14,7 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 		const { tweet } = req.body;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 		const cache: IGenericCache = redisClient;
-		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache, emit);
 		const response: IGenericResponse = await createTweet(tweetRepo, userProfile, tweet);
 		return res.status(response.error ? 400 : 201).send(response);
 	} catch (err) {

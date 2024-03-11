@@ -1,4 +1,4 @@
-import { IGenericCache } from "@/types/cacheTypes";
+import { IGenericCache } from "@/types/miscTypes";
 import { IGenericUserProfileModel, IGenericUserProfileRepo, IUserProfileObject } from "@/types/userProfileTypes";
 
 export default class UserProfileRepository implements IGenericUserProfileRepo {

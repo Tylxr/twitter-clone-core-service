@@ -3,7 +3,7 @@ import { IFeedFromAllCheckResponse, IFeedResponse } from "@/types/networkTypes";
 import mongoose, { isValidObjectId } from "mongoose";
 import { IGenericTweetRepo, ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
 import TweetRepository from "@/repositories/tweetRepo";
-import { IGenericCache } from "@/types/cacheTypes";
+import { IGenericCache } from "@/types/miscTypes";
 import { redisClient } from "@/connections/redis";
 import { checkFromAll, fromAll, fromUser } from "@/services/feedService";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";

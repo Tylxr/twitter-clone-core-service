@@ -131,4 +131,25 @@ export default class TweetRepository implements IGenericTweetRepo {
 			throw new Error(`Unable to invalidate cache "feed_from_user_${tweetUserId}" or "feed_from_all".`);
 		}
 	}
+
+	public async toggleLikeTweetComment(tweetId: string, commentId: string, userProfileUsername: string, tweetUserId: string): Promise<void> {
+		try {
+			// Toggle like
+			await this.tweetModel.toggleLikeTweetComment(tweetId, commentId, userProfileUsername);
+		} catch (err) {
+			console.error(err);
+			throw new Error(`Unable to toggle like on tweet's comment for tweetId: ${tweetId} for user: ${userProfileUsername}`);
+		}
+
+		try {
+			// Invalidate cache for feed and user feed
+			await this.cache.delete(`feed_from_user_${tweetUserId}`);
+			console.log(`Removed ${tweetUserId}'s feed from the cache as a tweet's comment was liked.`);
+			await this.cache.delete("feed_from_all");
+			console.log(`Removed 'feed from all' from the cache as a tweet's comment was liked.`);
+		} catch (err) {
+			console.error(err);
+			throw new Error(`Unable to invalidate cache "feed_from_user_${tweetUserId}" or "feed_from_all".`);
+		}
+	}
 }

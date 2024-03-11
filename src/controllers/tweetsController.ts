@@ -60,7 +60,10 @@ export async function likeTweetComment(req: Request, res: Response, next: NextFu
 		const { tweetId, commentId } = req.params;
 		const { userProfileUsername } = req;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const response: IGenericResponse = await toggleLikeTweetComment(tweetModel, tweetId, commentId, userProfileUsername);
+		const cache: IGenericCache = redisClient;
+		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+		const tweetUserId = req.tweet.userProfile._id;
+		const response: IGenericResponse = await toggleLikeTweetComment(tweetRepo, tweetId, commentId, userProfileUsername, tweetUserId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

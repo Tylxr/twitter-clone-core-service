@@ -57,15 +57,16 @@ export async function toggleLikeTweet(
 }
 
 export async function toggleLikeTweetComment(
-	tweetModel: IGenericTweetModel,
+	tweetRepo: IGenericTweetRepo,
 	tweetId: string,
 	commentId: string,
 	userProfileUsername: string,
+	tweetUserId: string,
 ): Promise<IGenericResponse> {
 	if (!tweetId || !commentId || !userProfileUsername) return { error: true, errorMessage: "No tweetId, commentId or user profile username provided." };
 
 	try {
-		await tweetModel.toggleLikeTweetComment(tweetId, commentId, userProfileUsername);
+		await tweetRepo.toggleLikeTweetComment(tweetId, commentId, userProfileUsername, tweetUserId);
 		return { error: false };
 	} catch (err) {
 		console.error(err);

@@ -28,6 +28,10 @@ const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseMod
 			likes: {
 				type: [String], // Array of usernames
 			},
+			createdDate: {
+				type: Date,
+				default: Date.now(),
+			},
 		},
 	],
 	likes: {
@@ -48,12 +52,23 @@ tweetSchema.static("getById", async function (_id: string, lean?: boolean) {
 				model: "UserProfile",
 				select: "_id username name",
 			})
+			.populate({
+				path: "comments.userProfile",
+				model: "UserProfile",
+				select: "_id username name",
+			})
 			.lean();
-	return await this.findById(_id).populate({
-		path: "userProfile",
-		model: "UserProfile",
-		select: "_id username name",
-	});
+	return await this.findById(_id)
+		.populate({
+			path: "userProfile",
+			model: "UserProfile",
+			select: "_id username name",
+		})
+		.populate({
+			path: "comments.userProfile",
+			model: "UserProfile",
+			select: "_id username name",
+		});
 });
 tweetSchema.static("getFeedFromAll", async function () {
 	// TODO: Pagination at a later date
@@ -120,6 +135,7 @@ tweetSchema.static("postComment", async function (tweetId: string, userProfileId
 					userProfile: userProfileId,
 					body: comment,
 					likes: [],
+					createdDate: new Date(),
 				},
 			},
 		},

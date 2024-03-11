@@ -55,4 +55,5 @@ export interface IGenericTweetRepo {
 	checkFeedFromAll(tweetId: string): Promise<boolean>;
 	getFeedFromUser(username: string): Promise<ITweetObject[]>;
 	toggleLike(tweetId: string, userProfileUsername: string, tweetUser: string): Promise<void>;
+	postComment(tweetId: string, userProfileUsername: string, comment: string, tweetUser: string): Promise<void>;
 }

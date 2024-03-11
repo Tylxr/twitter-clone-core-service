@@ -20,12 +20,18 @@ export async function createTweet(tweetRepo: IGenericTweetRepo, userProfile: IUs
 	}
 }
 
-export async function createComment(tweetModel: IGenericTweetModel, tweetId: string, userProfileId: string, comment: string): Promise<IGenericResponse> {
+export async function createComment(
+	tweetRepo: IGenericTweetRepo,
+	tweetId: string,
+	userProfileId: string,
+	comment: string,
+	tweetUserId: string,
+): Promise<IGenericResponse> {
 	if (comment.length === 0) {
 		return { error: true, errorMessage: "Comment provided is invalid." };
 	}
 	try {
-		await tweetModel.postComment(tweetId, userProfileId, comment);
+		await tweetRepo.postComment(tweetId, userProfileId, comment, tweetUserId);
 		return { error: false, message: "Tweet posted successfully." };
 	} catch (err) {
 		console.error(err);

@@ -28,7 +28,10 @@ export async function postComment(req: Request, res: Response, next: NextFunctio
 		const { userProfile } = req;
 		const { comment } = req.body;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const response: IGenericResponse = await createComment(tweetModel, tweetId, userProfile._id, comment);
+		const cache: IGenericCache = redisClient;
+		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+		const tweetUserId = req.tweet.userProfile._id;
+		const response: IGenericResponse = await createComment(tweetRepo, tweetId, userProfile._id, comment, tweetUserId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

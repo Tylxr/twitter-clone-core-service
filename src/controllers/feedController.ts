@@ -10,10 +10,11 @@ import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types
 import { retrieveUserIdByUsername } from "@/services/userProfileService";
 
 export async function getFeedFromAll(req: Request, res: Response, next: NextFunction) {
+	const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
+	const cache: IGenericCache = redisClient;
+	const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+
 	try {
-		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const cache: IGenericCache = redisClient;
-		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
 		const response: IFeedResponse = await fromAll(tweetRepo);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
@@ -23,15 +24,17 @@ export async function getFeedFromAll(req: Request, res: Response, next: NextFunc
 }
 
 export async function checkFeedFromAll(req: Request, res: Response, next: NextFunction) {
-	try {
-		const { tweetId } = req.body;
-		if (!isValidObjectId(tweetId)) {
-			return res.status(400).send({ error: true, errorMessage: `Invalid tweetId provided - unable to cast '${tweetId}' to ObjectId.` });
-		}
+	const { tweetId } = req.body;
 
-		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const cache: IGenericCache = redisClient;
-		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+	if (!isValidObjectId(tweetId)) {
+		return res.status(400).send({ error: true, errorMessage: `Invalid tweetId provided - unable to cast '${tweetId}' to ObjectId.` });
+	}
+
+	const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
+	const cache: IGenericCache = redisClient;
+	const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+
+	try {
 		const response: IFeedFromAllCheckResponse = await checkFromAll(tweetRepo, tweetId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
@@ -41,22 +44,35 @@ export async function checkFeedFromAll(req: Request, res: Response, next: NextFu
 }
 
 export async function getFeedFromUser(req: Request, res: Response, next: NextFunction) {
+	const { username } = req.params;
+
+	// Grab the userId using the username
+	const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
+	const userIdResponse = await retrieveUserIdByUsername(userProfileModel, username);
+	if (userIdResponse.error) return res.status(400).send({ error: userIdResponse.error, errorMessage: userIdResponse.errorMessage });
+
+	// Grab the tweets that match the userId
+	const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
+	const cache: IGenericCache = redisClient;
+	const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
+
 	try {
-		const { username } = req.params;
-
-		// Grab the userId using the username
-		const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-		const userIdResponse = await retrieveUserIdByUsername(userProfileModel, username);
-		if (userIdResponse.error) return res.status(400).send({ error: userIdResponse.error, errorMessage: userIdResponse.errorMessage });
-
-		// Grab the tweets that match the userId
-		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
-		const cache: IGenericCache = redisClient;
-		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
 		const response: IFeedResponse = await fromUser(tweetRepo, userIdResponse.userId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);
 		return res.status(500).send({ error: true });
+	}
+}
+
+export async function getFeedFromFollowing() {
+	const username = "";
+	const userId = "1234567890";
+
+	// const response =
+
+	try {
+	} catch (err) {
+		console.error(err);
 	}
 }

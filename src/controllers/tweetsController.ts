@@ -6,7 +6,7 @@ import { createComment, createTweet, getTweetById, toggleLikeTweet, toggleLikeTw
 import { redisClient } from "@/connections/redis";
 import { IGenericCache } from "@/types/miscTypes";
 import TweetRepository from "@/repositories/tweetRepo";
-import { emit } from "@/connections/socketio";
+import { getEmitter } from "@/connections/events";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	try {
@@ -14,7 +14,7 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 		const { tweet } = req.body;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 		const cache: IGenericCache = redisClient;
-		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache, emit);
+		const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache, getEmitter());
 		const response: IGenericResponse = await createTweet(tweetRepo, userProfile, tweet);
 		return res.status(response.error ? 400 : 201).send(response);
 	} catch (err) {
@@ -42,6 +42,8 @@ export async function postComment(req: Request, res: Response, next: NextFunctio
 
 export async function likeTweet(req: Request, res: Response, next: NextFunction) {
 	try {
+		getEmitter().emit("POST_CREATED");
+
 		const { tweetId } = req.params;
 		const { userProfileUsername } = req;
 		const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");

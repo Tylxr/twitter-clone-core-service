@@ -14,7 +14,6 @@ export default (server: http.Server) => {
 	ioServer.on("connection", (socket) => {
 		// Store the socket for later use
 		socketio = socket;
-
 		loadSockets();
 	});
 };

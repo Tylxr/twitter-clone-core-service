@@ -13,10 +13,15 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 	const { tweet } = req.body;
 	const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 	const cache: IGenericCache = redisClient;
-	const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache, getEmitter());
+	const tweetRepo: IGenericTweetRepo = new TweetRepository(tweetModel, cache);
 
 	try {
 		const response: IGenericResponse = await createTweet(tweetRepo, userProfile, tweet);
+
+		if (!response.error) {
+			getEmitter().emit("POST_CREATED", userProfile._id);
+		}
+
 		return res.status(response.error ? 400 : 201).send(response);
 	} catch (err) {
 		console.error(err);

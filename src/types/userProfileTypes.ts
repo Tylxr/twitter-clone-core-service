@@ -22,6 +22,7 @@ export interface IUserProfileDocument extends IUserProfileObject {
 // Generic Tweet ORM model - statics live in here
 export interface IGenericUserProfileModel {
 	new (userProfile: IUserProfileObject): IUserProfileDocument;
+	getFollowingListByUserId(userId: string): Promise<string[]>;
 	getIdByUsername(username: string): Promise<string>;
 	getByUsername(username: string, lean?: boolean): Promise<IUserProfileDocument | undefined>;
 	deleteByUsername(username: string): Promise<void>;
@@ -32,6 +33,7 @@ export interface IGenericUserProfileModel {
 export interface IUserProfileMongooseDocument extends Omit<IUserProfileObject, "_id">, Document {}
 
 export interface IUserProfileMongooseModel extends Model<IUserProfileMongooseDocument> {
+	getFollowingListByUserId(userId: string): Promise<string[]>;
 	getIdByUsername(username: string): Promise<string>;
 	getByUsername(username: string, lean?: boolean): Promise<IUserProfileMongooseDocument | undefined>;
 	deleteByUsername(username: string): Promise<void>;

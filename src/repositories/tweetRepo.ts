@@ -1,18 +1,14 @@
-import { emitSocket } from "@/connections/socketio";
-import { IGenericCache, SocketEmitter } from "@/types/miscTypes";
+import { IGenericCache } from "@/types/miscTypes";
 import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
 import { IUserProfileObject } from "@/types/userProfileTypes";
-import type EventEmitter from "events";
 
 export default class TweetRepository implements IGenericTweetRepo {
 	private tweetModel: IGenericTweetModel;
 	private cache: IGenericCache;
-	private emitter: EventEmitter;
 
-	constructor(tweetModel: IGenericTweetModel, cache: IGenericCache, emitter?: EventEmitter) {
+	constructor(tweetModel: IGenericTweetModel, cache: IGenericCache) {
 		this.tweetModel = tweetModel;
 		this.cache = cache;
-		this.emitter = emitter;
 	}
 
 	public async createTweet(userProfile: IUserProfileObject, tweet: string): Promise<void> {
@@ -25,8 +21,6 @@ export default class TweetRepository implements IGenericTweetRepo {
 				createdDate: new Date(),
 			});
 			await tweetObj.save();
-
-			this.emitter.emit("POST_CREATED");
 		} catch (err) {
 			console.error(err);
 			throw new Error("Unable to create tweet for user: " + userProfile);
@@ -34,8 +28,8 @@ export default class TweetRepository implements IGenericTweetRepo {
 
 		try {
 			// Remove this user's cached feed
-			await this.cache.delete(`feed_from_user_${userProfile}`);
-			console.log(`Removed ${userProfile}'s feed from the cache as a new tweet was created.`);
+			await this.cache.delete(`feed_from_user_${userProfile._id}`);
+			console.log(`Removed ${userProfile._id}'s feed from the cache as a new tweet was created.`);
 
 			// Remove 'from all' cached feed
 			await this.cache.delete("feed_from_all");

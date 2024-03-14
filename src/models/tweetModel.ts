@@ -1,5 +1,6 @@
 import mongoose, { Schema, ObjectId } from "mongoose";
 import { ITweetMongooseDocument, ITweetMongooseModel } from "@/types/tweetTypes";
+import { IUserProfileMongooseDocument } from "@/types/userProfileTypes";
 
 // Schema
 const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseModel>({
@@ -86,6 +87,22 @@ tweetSchema.static("getFeedFromUser", async function (userId: string) {
 	// TODO: Pagination at a later date
 	return await this.find({
 		userProfile: userId,
+	})
+		.populate({
+			path: "userProfile",
+			model: "UserProfile",
+			select: "_id username name",
+		})
+		.limit(20)
+		.sort({ createdDate: -1 })
+		.lean();
+});
+tweetSchema.static("getFollowingFeedForUser", async function (following: string[]) {
+	// TODO: Pagination at a later date
+	const userProfiles = await mongoose.model("UserProfile").find({ username: { $in: following } }, "_id");
+	const userProfileIds: string[] = userProfiles.map((profile: IUserProfileMongooseDocument) => profile._id.toString());
+	return await this.find({
+		userProfile: { $in: userProfileIds },
 	})
 		.populate({
 			path: "userProfile",

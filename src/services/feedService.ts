@@ -1,5 +1,6 @@
 import { IFeedFromAllCheckResponse, IFeedResponse } from "@/types/networkTypes";
 import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
+import { IGenericUserProfileModel } from "@/types/userProfileTypes";
 
 export async function fromAll(tweetRepo: IGenericTweetRepo): Promise<IFeedResponse> {
 	try {
@@ -36,16 +37,15 @@ export async function fromUser(tweetRepo: IGenericTweetRepo, userId: string): Pr
 	}
 }
 
-export async function fromFollowing(tweetRepo: IGenericTweetRepo, userId: string): Promise<IFeedResponse> {
+export async function fromFollowing(tweetModel: IGenericTweetModel, userProfileModel: IGenericUserProfileModel, userId: string): Promise<IFeedResponse> {
 	if (!userId) {
 		return { error: true, errorMessage: "Invalid userId provided.", feed: [] };
 	}
 
 	try {
-		// Call a userModel method that gets the user's following array
-		// Using this following array, call a tweetmodel method which gets any tweets that
-		// are in the array of followed users. Sort the array and populate as needed.
-		// const feed: ITweetObject[] = await
+		const following = await userProfileModel.getFollowingListByUserId(userId);
+		const feed = await tweetModel.getFollowingFeedForUser(following);
+		return { error: false, feed };
 	} catch (err) {
 		console.error(err);
 		return { error: true, errorMessage: "Error getting feed from following.", feed: [] };

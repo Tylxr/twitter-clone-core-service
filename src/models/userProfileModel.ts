@@ -57,6 +57,9 @@ userProfileSchema.virtual("followingFormatted").get(function () {
 });
 
 // Statics
+userProfileSchema.static("getFollowingListByUserId", async function (userId: string): Promise<string[]> {
+	return await this.findById(userId, { _id: 0, following: 1 }).then((doc: IUserProfileMongooseDocument) => doc.following);
+});
 userProfileSchema.static("getIdByUsername", async function (username: string): Promise<string | undefined> {
 	const doc: IUserProfileMongooseDocument = await this.findOne({ username }, { _id: 1 });
 	return doc ? doc._id.toString() : undefined;

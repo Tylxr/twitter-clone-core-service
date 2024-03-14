@@ -51,7 +51,7 @@ export async function retrieveUserIdByUsername(userProfileModel: IGenericUserPro
 		return { error: false, userId };
 	} catch (err) {
 		console.error(err);
-		return { error: true, errorMessage: "Error deleting user profile.", userId: undefined };
+		return { error: true, errorMessage: "Error retrieving user profile Id.", userId: undefined };
 	}
 }
 

@@ -27,6 +27,7 @@ export interface IGenericTweetModel {
 	getById(_id: string, lean?: boolean): Promise<ITweetDocument | undefined>;
 	getFeedFromAll(): Promise<ITweetDocument[]>;
 	getFeedFromUser(username: string): Promise<ITweetDocument[]>;
+	getFollowingFeedForUser(following: string[]): Promise<ITweetDocument[]>;
 	getLatestTweetId(): Promise<string>;
 	postComment(tweetId: string, userProfileId: string, comment: string): Promise<void>;
 	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;
@@ -42,6 +43,7 @@ export interface ITweetMongooseModel extends Model<ITweetMongooseDocument> {
 	getById(_id: string, lean?: boolean): Promise<ITweetMongooseDocument | undefined>;
 	getFeedFromAll(): Promise<ITweetMongooseDocument[]>;
 	getFeedFromUser(username: string): Promise<ITweetMongooseDocument[]>;
+	getFollowingFeedForUser(following: string[]): Promise<ITweetMongooseDocument[]>;
 	getLatestTweetId(): Promise<string>;
 	postComment(tweetId: string, userProfileId: string, comment: string): Promise<void>;
 	toggleLikeTweet(tweetId: string, userProfileUsername: string): Promise<void>;

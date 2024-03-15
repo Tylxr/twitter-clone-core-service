@@ -6,7 +6,7 @@ import { createComment, createTweet, getTweetById, toggleLikeTweet, toggleLikeTw
 import { redisClient } from "@/connections/redis";
 import { IGenericCache } from "@/types/miscTypes";
 import TweetRepository from "@/repositories/tweetRepo";
-import { getEmitter } from "@/connections/events";
+import { emitSocket } from "@/connections/socketio";
 
 export async function postTweet(req: Request, res: Response, next: NextFunction) {
 	const { userProfile } = req;
@@ -19,7 +19,7 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 		const response: IGenericResponse = await createTweet(tweetRepo, userProfile, tweet);
 
 		if (!response.error) {
-			getEmitter().emit("POST_CREATED", userProfile._id);
+			emitSocket("POST_CREATED", userProfile.username, true);
 		}
 
 		return res.status(response.error ? 400 : 201).send(response);

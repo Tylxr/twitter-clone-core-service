@@ -19,7 +19,7 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
 		const response: IGenericResponse = await createTweet(tweetRepo, userProfile, tweet);
 
 		if (!response.error) {
-			emitSocket("POST_CREATED", userProfile.username, true);
+			emitSocket("POST_CREATED", userProfile.username);
 		}
 
 		return res.status(response.error ? 400 : 201).send(response);

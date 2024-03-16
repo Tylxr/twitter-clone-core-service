@@ -37,3 +37,5 @@ export interface IFeedResponse extends IGenericResponse {
 export interface IFeedFromAllCheckResponse extends IGenericResponse {
 	latest?: boolean;
 }
+
+export type AuthenticationMiddlewareResponse = { authenticated: boolean; error: boolean; errorMessage: string; data: { username: string } | null };

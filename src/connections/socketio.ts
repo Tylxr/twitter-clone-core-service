@@ -11,6 +11,12 @@ export default (server: http.Server) => {
 		},
 	});
 
+	io.use((socket, next) => {
+		console.log("Running socket.io middleware");
+		// TODO: Implement auth middleware
+		next();
+	});
+
 	io.on("connection", (socket) => {
 		// Store the socket for later use
 		socketio = socket;

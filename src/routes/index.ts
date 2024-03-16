@@ -6,6 +6,7 @@ import feedRoutes from "./feedRoutes";
 import authInstance from "@/connections/authInstance";
 import mongoose from "mongoose";
 import { IUserProfileMongooseDocument, IUserProfileMongooseModel } from "@/types/userProfileTypes";
+import { AuthenticationMiddlewareResponse } from "@/types/networkTypes";
 
 const router = express.Router();
 
@@ -13,9 +14,19 @@ const router = express.Router();
 router.get("/health", (req: Request, res: Response, next: NextFunction) => res.sendStatus(200));
 
 // Secure the routes below
-router.use((req: Request, res: Response, next: NextFunction) => {
-	const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
-	ensureAuthenticated(authInstance, userProfileModel)(req, res, next);
+router.use(async (req: Request, res: Response, next: NextFunction) => {
+	const token = req.headers.authorization && req.headers.authorization.split("Bearer ")?.[1];
+	const response: AuthenticationMiddlewareResponse = await ensureAuthenticated(token, authInstance);
+	if (response.authenticated && response.data) {
+		if (response.data) {
+			const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
+			req.userProfileUsername = response.data.username;
+			req.userProfile = await userProfileModel.getByUsername(response.data.username, true);
+		}
+		return next();
+	} else {
+		return res.status(401).send({ error: true, errorMessage: response.errorMessage || "Authentication failed." });
+	}
 });
 
 // Routes

@@ -1,5 +1,8 @@
 import http from "http";
 import { Server, Socket as Socket } from "socket.io";
+import ensureAuthenticated from "@/middleware/auth";
+import authInstance from "./authInstance";
+import { AuthenticationMiddlewareResponse } from "@/types/networkTypes";
 
 let socketio: Socket | undefined;
 let io: Server | undefined;
@@ -11,10 +14,17 @@ export default (server: http.Server) => {
 		},
 	});
 
-	io.use((socket, next) => {
-		console.log("Running socket.io middleware");
-		// TODO: Implement auth middleware
-		next();
+	// Authentication middleware
+	io.use(async (socket, next) => {
+		const { token } = socket.handshake.auth;
+		const response: AuthenticationMiddlewareResponse = await ensureAuthenticated(token, authInstance);
+
+		if (response.authenticated) {
+			next();
+		} else {
+			console.error("User not authenticated with socket instance.");
+			next(new Error(response.errorMessage || "Authentication failed."));
+		}
 	});
 
 	io.on("connection", (socket) => {

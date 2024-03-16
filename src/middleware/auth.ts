@@ -36,7 +36,7 @@ export default async <T extends { tokenPayload: { username: string } }>(
 			return { authenticated: false, error: true, errorMessage: "Authentication failed.", data: null };
 		}
 	} catch (err) {
-		console.error(err.message);
+		console.error(`Authentication via auth middleware failed - ${err.message}.`);
 		return { authenticated: false, error: true, errorMessage: "Authentication failed.", data: null };
 	}
 };

@@ -77,7 +77,7 @@ export async function getFeedFromFollowing(req: Request, res: Response, next: Ne
 	const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 
 	try {
-		const response: IFeedResponse = await fromFollowing(tweetModel, userProfileModel, userProfile._id);
+		const response: IFeedResponse = await fromFollowing(userProfileModel.getFollowingListByUserId, tweetModel.getFollowingFeedForUser, userProfile._id);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

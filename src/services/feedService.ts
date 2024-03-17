@@ -1,5 +1,5 @@
 import { IFeedFromAllCheckResponse, IFeedResponse } from "@/types/networkTypes";
-import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
+import { IGenericTweetModel, IGenericTweetRepo, ITweetDocument, ITweetObject } from "@/types/tweetTypes";
 import { IGenericUserProfileModel } from "@/types/userProfileTypes";
 
 export async function fromAll(tweetRepo: IGenericTweetRepo): Promise<IFeedResponse> {
@@ -37,14 +37,18 @@ export async function fromUser(tweetRepo: IGenericTweetRepo, userId: string): Pr
 	}
 }
 
-export async function fromFollowing(tweetModel: IGenericTweetModel, userProfileModel: IGenericUserProfileModel, userId: string): Promise<IFeedResponse> {
+export async function fromFollowing(
+	getFollowingListByUserId: (userId: string) => Promise<string[]>,
+	getFollowingFeedForUser: (following: string[]) => Promise<ITweetDocument[]>,
+	userId: string,
+): Promise<IFeedResponse> {
 	if (!userId) {
 		return { error: true, errorMessage: "Invalid userId provided.", feed: [] };
 	}
 
 	try {
-		const following = await userProfileModel.getFollowingListByUserId(userId);
-		const feed = await tweetModel.getFollowingFeedForUser(following);
+		const following = await getFollowingListByUserId(userId);
+		const feed = await getFollowingFeedForUser(following);
 		return { error: false, feed };
 	} catch (err) {
 		console.error(err);

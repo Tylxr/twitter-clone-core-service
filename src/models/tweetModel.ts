@@ -46,7 +46,7 @@ const tweetSchema: Schema = new Schema<ITweetMongooseDocument, ITweetMongooseMod
 
 // Statics
 tweetSchema.static("getById", async function (_id: string, lean?: boolean) {
-	if (lean)
+	if (lean) {
 		return await this.findById(_id)
 			.populate({
 				path: "userProfile",
@@ -59,6 +59,7 @@ tweetSchema.static("getById", async function (_id: string, lean?: boolean) {
 				select: "_id username name",
 			})
 			.lean();
+	}
 	return await this.findById(_id)
 		.populate({
 			path: "userProfile",

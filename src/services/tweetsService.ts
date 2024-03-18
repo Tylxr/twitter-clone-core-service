@@ -1,5 +1,5 @@
 import { IGenericResponse, ITweetResponse } from "@/types/networkTypes";
-import { IGenericTweetModel, IGenericTweetRepo, ITweetObject } from "@/types/tweetTypes";
+import { IGenericTweetModel, IGenericTweetRepo, ITweetDocument, ITweetObject } from "@/types/tweetTypes";
 import { IUserProfileObject } from "@/types/userProfileTypes";
 
 export async function createTweet(tweetRepo: IGenericTweetRepo, userProfile: IUserProfileObject, tweet: string): Promise<IGenericResponse> {
@@ -32,10 +32,10 @@ export async function createComment(
 	}
 	try {
 		await tweetRepo.postComment(tweetId, userProfileId, comment, tweetUserId);
-		return { error: false, message: "Tweet posted successfully." };
+		return { error: false, message: "Comment posted successfully." };
 	} catch (err) {
 		console.error(err);
-		return { error: true, errorMessage: "Error posting a tweet." };
+		return { error: true, errorMessage: "Error posting a comment." };
 	}
 }
 
@@ -74,11 +74,11 @@ export async function toggleLikeTweetComment(
 	}
 }
 
-export async function getTweetById(tweetModel: IGenericTweetModel, tweetId: string): Promise<ITweetResponse> {
+export async function getTweetById(getById: (_id: string, lean?: boolean) => Promise<ITweetDocument | undefined>, tweetId: string): Promise<ITweetResponse> {
 	if (!tweetId) return { error: true, errorMessage: "No tweetId provided.", tweet: undefined };
 
 	try {
-		const tweet: ITweetObject = await tweetModel.getById(tweetId);
+		const tweet: ITweetDocument = await getById(tweetId);
 		return { error: !tweet, tweet, errorMessage: !tweet ? "No tweet found for tweetId: " + tweetId : "" };
 	} catch (err) {
 		console.error(err);

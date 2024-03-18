@@ -1,16 +1,7 @@
-import { IGenericTweetModel, IGenericTweetRepo } from "@/types/tweetTypes";
 import { fromAll, checkFromAll, fromUser, fromFollowing } from "../services/feedService";
+import { mockTweetRepo } from "./mocks";
 
 // Mocked dependencies
-const mockTweetRepo = {
-	getFeedFromAll: jest.fn().mockImplementation(() => [{}, {}]),
-	checkFeedFromAll: jest.fn().mockImplementation(() => true),
-	getFeedFromUser: jest.fn().mockImplementation(() => [{}, {}]),
-	createTweet: null,
-	toggleLike: null,
-	postComment: null,
-	toggleLikeTweetComment: null,
-} as jest.Mocked<IGenericTweetRepo>;
 const validId = "123";
 
 beforeEach(() => {
@@ -18,7 +9,7 @@ beforeEach(() => {
 	jest.spyOn(console, "error").mockImplementation(jest.fn());
 });
 
-describe("Feed From All - Service", () => {
+describe("Feed From All - FeedService", () => {
 	it("Should call getFeedFromAll correctly", () => {
 		fromAll(mockTweetRepo);
 		expect(mockTweetRepo.getFeedFromAll).toHaveBeenCalledTimes(1);
@@ -47,7 +38,7 @@ describe("Feed From All - Service", () => {
 	});
 });
 
-describe("Check From All - Service", () => {
+describe("Check From All - FeedService", () => {
 	it("Should error if no tweetId is provided", async () => {
 		const result = await checkFromAll(mockTweetRepo, "");
 		expect(result).toHaveProperty("error");
@@ -78,7 +69,7 @@ describe("Check From All - Service", () => {
 	});
 });
 
-describe("Feed From User - Service", () => {
+describe("Feed From User - FeedService", () => {
 	it("Should error if no userId is provided", async () => {
 		const result = await fromUser(mockTweetRepo, "");
 		expect(result).toHaveProperty("error");
@@ -112,7 +103,7 @@ describe("Feed From User - Service", () => {
 	});
 });
 
-describe("Feed From Following", () => {
+describe("Feed From Following - FeedService", () => {
 	const mockGetFollowingListByUserId = jest.fn().mockImplementation(() => ["a", "b"]);
 	const mockGetFollowingFeedForUser = jest.fn().mockImplementation(() => [{}, {}]);
 

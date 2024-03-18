@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "nodemon",
 		"test": "jest --watch --verbose",
-		"test-once": "jest",
+		"test-once": "jest --onlyChanged",
 		"prepare": "husky"
 	},
 	"_moduleAliases": {

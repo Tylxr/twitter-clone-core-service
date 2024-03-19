@@ -173,3 +173,45 @@ describe("Retrieve User Profile - UserProfileService", () => {
 		expect(mockUserProfileRepo.retrieveUserProfile).toHaveBeenCalledWith(mockUsername);
 	});
 });
+
+describe("Toggle Follow User - UserProfileService", () => {
+	it("Should return error if username is not provided", async () => {
+		const result: IGenericResponse = await toggleFollowUser(mockUserProfileRepo, "", "userProfileUsername");
+		expect(result.error).toBe(true);
+		expect(result.errorMessage).toBe("No/invalid username provided.");
+		expect(mockUserProfileRepo.toggleFollowUser).not.toHaveBeenCalled();
+	});
+
+	it("Should return error if userProfileUsername is not provided", async () => {
+		const result: IGenericResponse = await toggleFollowUser(mockUserProfileRepo, "username", "");
+		expect(result.error).toBe(true);
+		expect(result.errorMessage).toBe("Unable to determine originating user profile.");
+		expect(mockUserProfileRepo.toggleFollowUser).not.toHaveBeenCalled();
+	});
+
+	it("Should return error if username and userProfileUsername are the same", async () => {
+		const result: IGenericResponse = await toggleFollowUser(mockUserProfileRepo, mockUsername, mockUsername);
+		expect(result.error).toBe(true);
+		expect(result.errorMessage).toBe("Following your own account is not permitted.");
+		expect(mockUserProfileRepo.toggleFollowUser).not.toHaveBeenCalled();
+	});
+
+	it("Should toggle follow successfully", async () => {
+		const userProfileUsername = "userProfileUsername";
+		mockUserProfileRepo.toggleFollowUser.mockResolvedValueOnce(undefined);
+		const result: IGenericResponse = await toggleFollowUser(mockUserProfileRepo, mockUsername, userProfileUsername);
+		expect(result.error).toBe(false);
+		expect(result.errorMessage).toBeUndefined();
+		expect(mockUserProfileRepo.toggleFollowUser).toHaveBeenCalledWith(mockUsername, userProfileUsername);
+	});
+
+	it("Should return error if an error occurs during toggle follow", async () => {
+		const userProfileUsername = "userProfileUsername";
+		const mockError = new Error("Database Error");
+		mockUserProfileRepo.toggleFollowUser.mockRejectedValueOnce(mockError);
+		const result: IGenericResponse = await toggleFollowUser(mockUserProfileRepo, mockUsername, userProfileUsername);
+		expect(result.error).toBe(true);
+		expect(result.errorMessage).toBe(`Error trying to follower user ${mockUsername}.`);
+		expect(mockUserProfileRepo.toggleFollowUser).toHaveBeenCalledWith(mockUsername, userProfileUsername);
+	});
+});

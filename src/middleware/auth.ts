@@ -6,10 +6,12 @@ export default async <T extends { tokenPayload: { username: string } }>(
 ): Promise<AuthenticationMiddlewareResponse> => {
 	try {
 		if (!token) {
-			throw new Error("No bearer token supplied.");
+			return { authenticated: false, error: true, errorMessage: "No bearer token supplied.", data: null };
 		}
 		if (token === process.env.CORE_SERVER_TOKEN) {
-			console.log("Skipping auth request - admin token provided.");
+			if (process.env.NODE_ENV !== "test") {
+				console.log("Skipping auth request - admin token provided.");
+			}
 			return { authenticated: true, error: false, errorMessage: "", data: null };
 		}
 

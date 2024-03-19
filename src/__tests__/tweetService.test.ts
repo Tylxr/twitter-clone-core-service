@@ -1,4 +1,4 @@
-import { IGenericTweetRepo, ITweetDocument, ITweetObject } from "@/types/tweetTypes";
+import { ITweetObject } from "@/types/tweetTypes";
 import { createTweet, createComment, toggleLikeTweet, toggleLikeTweetComment, getTweetById } from "../services/tweetsService";
 import { IGenericResponse, ITweetResponse } from "@/types/networkTypes";
 import { mockTweetRepo, mockUserProfile } from "./mocks";

@@ -1,4 +1,5 @@
 import { IGenericTweetRepo } from "@/types/tweetTypes";
+import { IGenericUserProfileRepo } from "@/types/userProfileTypes";
 
 export const mockTweetRepo = {
 	createTweet: jest.fn(),
@@ -9,6 +10,12 @@ export const mockTweetRepo = {
 	postComment: jest.fn(),
 	toggleLikeTweetComment: jest.fn(),
 } as jest.Mocked<IGenericTweetRepo>;
+
+export const mockUserProfileRepo = {
+	retrieveUserProfile: jest.fn(),
+	updateUserProfile: jest.fn(),
+	toggleFollowUser: jest.fn(),
+} as jest.Mocked<IGenericUserProfileRepo>;
 
 export const mockUserProfile = {
 	_id: "123",

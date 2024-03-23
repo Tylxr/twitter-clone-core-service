@@ -1,5 +1,5 @@
 import { IGenericCache } from "@/types/miscTypes";
-import { createClient, RedisClientType, SetOptions } from "redis";
+import { createClient, RedisClientOptions, RedisClientType, SetOptions } from "redis";
 
 let CLIENT: RedisClientType | undefined;
 let CLIENT_LISTENER: RedisClientType | undefined;
@@ -7,13 +7,21 @@ let CLIENT_LISTENER: RedisClientType | undefined;
 export default async () => {
 	try {
 		console.log("Attempting to connect to Redis...");
+
+		const socketOpts: { [key: string]: string | number } = {
+			host: process.env.REDIS_HOST,
+		};
+
+		if (process.env.NODE_ENV === "local") {
+			socketOpts["port"] = parseInt(process.env.REDIS_PORT);
+		}
+
 		CLIENT = createClient({
-			socket: {
-				host: process.env.REDIS_HOST,
-				port: parseInt(process.env.REDIS_PORT),
-			},
+			legacyMode: true,
+			socket: socketOpts,
 			password: process.env.REDIS_PASSWORD,
 		});
+
 		await CLIENT.connect();
 		CLIENT_LISTENER = CLIENT.duplicate();
 		await CLIENT_LISTENER.connect();

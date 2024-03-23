@@ -1,4 +1,5 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config({ path: `.env${process.env.NODE_ENV === "local" ? ".local" : ""}` });
 import app from "./src/app";
 import http from "http";
 import connectToMongoose from "@/connections/mongoose";

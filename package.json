@@ -1,9 +1,10 @@
 {
 	"name": "core-service",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"dev": "nodemon",
+		"dev": "NODE_ENV=local nodemon",
+		"start": "NODE_ENV=production nodemon",
 		"test": "jest --verbose",
 		"test-watch": "jest --watch --verbose",
 		"test-once": "jest --onlyChanged",

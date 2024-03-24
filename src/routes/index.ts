@@ -25,7 +25,7 @@ router.use(async (req: Request, res: Response, next: NextFunction) => {
 		}
 		return next();
 	} else {
-		return res.status(401).send({ error: true, errorMessage: response.errorMessage || "Authentication failed." });
+		return res.status(401).send(response);
 	}
 });
 

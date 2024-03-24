@@ -17,7 +17,7 @@ router.get("/health", (req: Request, res: Response, next: NextFunction) => res.s
 router.use(async (req: Request, res: Response, next: NextFunction) => {
 	const token = req.headers.authorization && req.headers.authorization.split("Bearer ")?.[1];
 	const response: AuthenticationMiddlewareResponse = await ensureAuthenticated(token, authInstance);
-	if (response.authenticated && response.data) {
+	if (response.authenticated) {
 		if (response.data) {
 			const userProfileModel: IUserProfileMongooseModel = mongoose.model<IUserProfileMongooseDocument, IUserProfileMongooseModel>("UserProfile");
 			req.userProfileUsername = response.data.username;

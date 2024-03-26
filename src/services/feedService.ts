@@ -1,6 +1,5 @@
 import { IFeedFromAllCheckResponse, IFeedResponse } from "@/types/networkTypes";
-import { IGenericTweetModel, IGenericTweetRepo, ITweetDocument, ITweetObject } from "@/types/tweetTypes";
-import { IGenericUserProfileModel } from "@/types/userProfileTypes";
+import { IGenericTweetRepo, ITweetDocument, ITweetObject } from "@/types/tweetTypes";
 
 export async function fromAll(tweetRepo: IGenericTweetRepo): Promise<IFeedResponse> {
 	try {

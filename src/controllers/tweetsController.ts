@@ -86,7 +86,7 @@ export async function getTweet(req: Request, res: Response, next: NextFunction) 
 	const tweetModel: ITweetMongooseModel = mongoose.model<ITweetMongooseDocument, ITweetMongooseModel>("Tweet");
 
 	try {
-		const response: ITweetResponse = await getTweetById(tweetModel.getById, tweetId);
+		const response: ITweetResponse = await getTweetById(tweetModel.getById.bind(tweetModel), tweetId);
 		return res.status(response.error ? 400 : 200).send(response);
 	} catch (err) {
 		console.error(err);

@@ -6,6 +6,7 @@ export default async () => {
 			process.env.NODE_ENV === "local" ? ":" + process.env.MONGODB_PORT : ""
 		}/${process.env.MONGODB_DB}?authSource=admin`;
 		console.log("Attempting to connect to mongo instance...");
+
 		await mongoose.connect(mongoDBConnectionString);
 		console.log("✅ Connected to MongoDB successfully via Mongoose.");
 	} catch (err) {

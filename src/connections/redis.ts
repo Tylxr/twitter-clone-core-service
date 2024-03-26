@@ -1,5 +1,5 @@
 import { IGenericCache } from "@/types/miscTypes";
-import { createClient, RedisClientOptions, RedisClientType, SetOptions } from "redis";
+import { createClient, RedisClientType, SetOptions } from "redis";
 
 let CLIENT: RedisClientType | undefined;
 let CLIENT_LISTENER: RedisClientType | undefined;
@@ -17,7 +17,7 @@ export default async () => {
 		}
 
 		CLIENT = createClient({
-			legacyMode: true,
+			// legacyMode: true,
 			socket: socketOpts,
 			password: process.env.REDIS_PASSWORD,
 		});
@@ -38,7 +38,7 @@ export const redisClient: IGenericCache = {
 		try {
 			if (!CLIENT) throw new Error("No Redis connection available.");
 			const result = await CLIENT.get(key);
-			return JSON.parse(result);
+			return result ? JSON.parse(result) : undefined;
 		} catch (err) {
 			console.error(err);
 			return null;
@@ -79,6 +79,6 @@ export const listenToRedisEvent = async (eventName: string, callback: (message: 
 	if (!CLIENT || !CLIENT_LISTENER) throw new Error("No Redis connection available.");
 
 	await CLIENT_LISTENER.subscribe(eventName, (message: string) => {
-		callback(JSON.parse(message));
+		callback(message ? JSON.parse(message) : undefined);
 	});
 };

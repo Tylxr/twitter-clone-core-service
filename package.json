@@ -9,7 +9,7 @@
 		"test-watch": "jest --watch --verbose",
 		"test-once": "jest --onlyChanged",
 		"prepare": "husky",
-        "containerize": "docker run --name twitter-clone-core-service -p 4000:4000 --network twitter-clone-network --env-file .env -d core-service"
+		"containerize": "docker run --name twitter-clone-core-service -p 4000:4000 --network twitter-clone-network --env-file .env -d core-service"
 	},
 	"_moduleAliases": {
 		"@": "dist"
@@ -39,7 +39,6 @@
 		"mongoose": "^7.6.1",
 		"nodemon": "^3.0.1",
 		"ts-jest": "^29.1.2",
-		"ts-node": "^10.9.2",
 		"tsx": "^3.14.0",
 		"typescript": "^5.2.2"
 	}
